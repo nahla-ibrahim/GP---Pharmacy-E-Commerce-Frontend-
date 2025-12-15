@@ -1,0 +1,140 @@
+<nav class="bg-[var(--bg-primary)] py-3 border-b border-[var(--border-color)] shadow-[0_2px_10px_var(--shadow-md)] sticky z-50 top-0 backdrop-blur-sm transition-all duration-300" style="background-color: var(--bg-overlay);">
+  <div class="container flex justify-between items-center px-3 mx-auto">
+    <button class="lg:hidden text-xl text-[var(--primary)] hover:text-[var(--accent)] cursor-pointer transition-colors duration-200" (click)="openToggle()">
+
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <a class="flex items-center" href="#" routerLink="/">
+      <img [src]="logoPath()" alt="CareZone Logo" class="h-12 w-auto transition-opacity duration-300" style="transition-timing-function: var(--ease-smooth);" />
+    </a>
+
+    <div [class.open]="isOpenMenu()" class="side-menu">
+      <button (click)="openToggle()" class="lg:hidden close-menu-btn cursor-pointer text-xl hover:opacity-70"><i
+          class="fa-solid fa-xmark"></i></button>
+      <ul class="lg:flex lg:gap-3 mt-5 lg:mt-0">
+        <li>
+          <a class="text-[var(--text-primary)] py-2 px-3 inline-block cursor-pointer hover:bg-[var(--bg-secondary)] hover:text-[var(--accent)] w-full max-w-52 rounded-lg lg:hover:bg-transparent lg:hover:text-[var(--accent)] transition-all duration-300 font-medium"
+            routerLink="/" 
+            (click)="openToggle()"
+            style="transition-timing-function: var(--ease-smooth);">Home</a>
+        </li>
+        <li>
+          <a class="text-[var(--text-secondary)] py-2 px-3 inline-block cursor-pointer hover:bg-[var(--bg-secondary)] hover:text-[var(--accent)] w-full max-w-52 rounded-lg lg:hover:bg-transparent lg:hover:text-[var(--accent)] transition-all duration-300"
+            (click)="setDropdownMenu('cat')" role="button" style="transition-timing-function: var(--ease-smooth);">
+            Categories
+            <i class="fa-solid fa-caret-down"></i>
+          </a>
+          @if(activeDropdownMenu() == 'cat') {
+          <ul class="lg:absolute p-3 lg:bg-[var(--bg-card)] lg:border-2 lg:border-[var(--border-color)] lg:rounded-xl z-50 shadow-xl" style="box-shadow: 0 10px 25px var(--shadow-lg);">
+            @for (item of categories(); track $index) {
+            <li><a
+                class="text-[var(--text-secondary)] py-2 px-3 inline-block lg:hover:bg-[var(--bg-secondary)] lg:hover:text-[var(--accent)] w-full hover:bg-[var(--bg-secondary)] hover:text-[var(--accent)] max-w-52 rounded-lg transition-all duration-300"
+                [routerLink]="['/category', item.id]" 
+                (click)="openToggle()"
+                style="transition-timing-function: var(--ease-smooth);">{{item.name}}</a>
+            </li>
+            }
+
+          </ul>
+          }
+        </li>
+
+        <li>
+          <a class="text-[var(--text-secondary)] py-2 px-3 inline-block cursor-pointer hover:bg-[var(--bg-secondary)] hover:text-[var(--accent)] w-full max-w-52 rounded-lg lg:hover:bg-transparent lg:hover:text-[var(--accent)] transition-all duration-300"
+            [routerLink]="['/about']" 
+            (click)="openToggle()"
+            style="transition-timing-function: var(--ease-smooth);">About</a>
+        </li>
+        <li>
+          <a class="text-[var(--text-secondary)] py-2 px-3 inline-block cursor-pointer hover:bg-[var(--bg-secondary)] hover:text-[var(--accent)] w-full max-w-52 rounded-lg lg:hover:bg-transparent lg:hover:text-[var(--accent)] transition-all duration-300"
+            [routerLink]="['/contact']" 
+            (click)="openToggle()"
+            style="transition-timing-function: var(--ease-smooth);">Contact Us</a>
+        </li>
+        <li>
+          <a class="text-[var(--text-secondary)] py-2 px-3 inline-block cursor-pointer hover:bg-[var(--bg-secondary)] hover:text-[var(--accent)] w-full max-w-52 rounded-lg lg:hover:bg-transparent lg:hover:text-[var(--accent)] transition-all duration-300"
+            [routerLink]="['/recommendation']" 
+            (click)="openToggle()"
+            style="transition-timing-function: var(--ease-smooth);">Get Recommendations</a>
+        </li>
+      </ul>
+      <div class="w-full flex flex-row justify-start items-center gap-1 lg:hidden absolute bottom-5 pl-3 pr-5 left-0 text-lg">
+        <button 
+          (click)="toggleTheme()" 
+          class="flex-shrink-0 px-3 py-2 cursor-pointer text-[var(--neutral)] hover:text-[var(--accent)] transition-all duration-300 rounded-lg hover:bg-white/10"
+          [attr.aria-label]="themeService.isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'">
+          <i class="fa-solid" [ngClass]="themeService.isDarkMode() ? 'fa-sun' : 'fa-moon'"></i>
+        </button>
+        <a 
+          class="flex-shrink-0 px-3 py-2 cursor-pointer text-[var(--neutral)] hover:text-[var(--accent)] transition-all duration-300 hover:scale-110" 
+          (click)="openSearch()"
+          title="Search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </a>
+        <a 
+          class="flex-shrink-0 px-3 py-2 cursor-pointer relative text-[var(--neutral)] hover:text-[var(--accent)] transition-all duration-300 hover:scale-110" 
+          [routerLink]="['/cart']"
+          (click)="openToggle()"
+          title="Cart">
+          <i class="fa-solid fa-cart-shopping">
+            @if(cartserv.cartcount() != 0){
+            <span
+              class="absolute -top-2 -right-2 bg-[var(--accent)] text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-bold shadow-md animate-pulse">
+              {{cartserv.cartcount()}}
+            </span>}
+          </i>
+        </a>
+        <a 
+          class="flex-shrink-0 px-3 py-2 cursor-pointer relative text-[var(--neutral)] hover:text-[var(--accent)] transition-all duration-300 hover:scale-110" 
+          [routerLink]="['/favorite']"
+          (click)="openToggle()"
+          title="Favorites">
+          <i class="fa-solid fa-heart"></i>
+          @if(favserv.favCount() != 0){
+          <span
+            class="absolute -top-2 -right-2 bg-[var(--accent)] text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold shadow-md animate-pulse">
+            {{favserv.favCount()}}
+          </span>}
+        </a>
+        <a 
+          class="flex-shrink-0 px-2 py-2 cursor-pointer text-[var(--neutral)] hover:text-[var(--accent)] transition-all duration-300 hover:scale-110" 
+          [routerLink]="['/profile']"
+          (click)="openToggle()"
+          title="Profile">
+          <i class="fa-solid fa-user"></i>
+        </a> 
+      </div>
+    </div>
+
+    <div class="hidden lg:flex gap-2 items-center">
+      <button 
+        (click)="toggleTheme()" 
+        class="px-3 py-2 cursor-pointer text-[var(--neutral)] hover:text-[var(--accent)] transition-all duration-300 rounded-lg hover:bg-[var(--bg-secondary)] relative group"
+        [attr.aria-label]="themeService.isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'">
+        <i class="fa-solid" [ngClass]="themeService.isDarkMode() ? 'fa-sun' : 'fa-moon'"></i>
+        <span class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-[var(--primary)] text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+          {{ themeService.isDarkMode() ? 'Light Mode' : 'Dark Mode' }}
+        </span>
+      </button>
+      <a class="px-2 cursor-pointer text-[var(--neutral)] hover:text-[var(--accent)] transition-all duration-300 hover:scale-110" title="Search" (click)="openSearch()"><i class="fa-solid fa-magnifying-glass"></i></a>
+      <a class="px-2 cursor-pointer relative text-[var(--neutral)] hover:text-[var(--accent)] transition-all duration-300 hover:scale-110" [routerLink]="['/cart']" title="Cart"><i class="fa-solid fa-cart-shopping">
+          @if(cartserv.cartcount() != 0){
+          <span
+            class="absolute -top-2 -right-2  bg-[var(--accent)] text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold shadow-md animate-pulse">
+            {{cartserv.cartcount()}}
+          </span>}
+        </i>
+      </a>
+      <a class="px-2 cursor-pointer relative text-[var(--neutral)] hover:text-[var(--accent)] transition-all duration-300 hover:scale-110" [routerLink]="['/favorite']" title="Favorites"> <i class="fa-solid fa-heart"></i>
+        @if(favserv.favCount() != 0){<span
+            class="absolute -top-2 -right-2  bg-[var(--accent)] text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold shadow-md animate-pulse">
+              {{favserv.favCount()}}
+            </span>} </a>
+      <a class="px-2 cursor-pointer text-[var(--neutral)] hover:text-[var(--accent)] transition-all duration-300 hover:scale-110" [routerLink]="['/profile']" title="Profile">
+        <i class="fa-solid fa-user"></i>
+      </a>
+    </div>
+  </div>
+  <app-search-modal />
+</nav>

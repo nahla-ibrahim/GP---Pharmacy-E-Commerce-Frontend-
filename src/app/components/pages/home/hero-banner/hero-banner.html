@@ -1,0 +1,55 @@
+<section class="bg-gradient-to-br from-[var(--secondary)] via-[var(--background)] to-[var(--secondary)] dark:from-[var(--primary)] dark:via-[var(--neutral)] dark:to-[var(--primary)] py-12 md:py-16 lg:py-20 text-white relative overflow-hidden transition-all duration-500" style="transition-timing-function: var(--ease-smooth);">
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col lg:flex-row items-center justify-between gap-8 max-w-6xl mx-auto">
+      
+      <div class="lg:w-1/2 space-y-6">
+        <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-4 py-2 shadow-lg">
+          <i class="fas fa-truck text-[var(--highlight)]"></i>
+          <span class="text-sm font-semibold">Free Delivery on Orders Over 200 EGP</span>
+        </div>
+        
+        <div class="space-y-4">
+          <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
+            Get Your Medicines<br>
+            <span class="text-[var(--highlight)]">Delivered to Your Doorstep</span>
+          </h1>
+          
+          <p class="text-lg text-white/90 leading-relaxed">
+            Your trusted pharmacy partner for all healthcare needs.<br>
+            <span class="font-medium">Fast, reliable, and convenient.</span>
+          </p>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row gap-4 pt-4 ">
+          <button 
+            class="bg-[var(--primary)] text-white hover:bg-[var(--accent)] hover:shadow-xl px-8 py-3 rounded-lg font-semibold shadow-lg transform hover:scale-105"
+            routerLink="/products"
+            style="transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);">
+            <i class="fas fa-shopping-bag mr-2"></i>Start Shopping
+          </button>
+          <button 
+            class="border-2 border-white text-white hover:bg-white hover:text-[var(--primary)] px-8 py-3 rounded-lg font-semibold transform hover:scale-105 shadow-md"
+            [routerLink]="'/about'"
+            style="transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);">
+            Learn More <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="lg:w-1/2 flex justify-center">
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 md:p-12 border-2 border-white/30 shadow-2xl transform hover:scale-105 transition-all duration-300">
+          <div class="flex flex-col items-center justify-center space-y-4">
+            <div class="bg-[var(--accent)]/20 rounded-full p-6 border-2 border-[var(--highlight)]/50">
+              <i class="fas fa-heartbeat text-5xl md:text-6xl text-[var(--highlight)]"></i>
+            </div>
+            <div class="text-center">
+              <p class="text-xl md:text-2xl font-semibold">Healthcare Products</p>
+              <p class="text-white/90 text-sm md:text-base mt-2">Medicines • Vitamins • Supplements</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</section>

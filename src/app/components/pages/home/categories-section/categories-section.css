@@ -1,0 +1,23 @@
+/* Category hover effects - similar to main slider */
+.category-item {
+  transition: all 0.3s ease;
+}
+
+.category-item:hover {
+  transform: translateY(-2px);
+}
+
+.category-image-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.category-image {
+  transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+.category-item:hover .category-image {
+  transform: scale(1.05);
+  filter: brightness(1.05);
+}
+

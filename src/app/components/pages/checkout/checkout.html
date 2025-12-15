@@ -1,0 +1,158 @@
+<section class="py-12 bg-gray-50 min-h-screen">
+  <div class="container mx-auto px-4">
+    
+    @if (showForm()) {
+      <!-- Checkout Form -->
+      <div class="max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">Checkout</h1>
+        
+        @if (errorMessage()) {
+          <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
+            {{ errorMessage() }}
+          </div>
+        }
+
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+          <h2 class="text-xl font-semibold text-gray-800 mb-6">Delivery Information</h2>
+          
+          <form (ngSubmit)="createOrder()" class="space-y-4">
+            <!-- Phone Number -->
+            <div>
+              <label for="phoneNumber" class="block text-sm font-medium text-gray-700 mb-2">
+                Phone Number <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="tel"
+                id="phoneNumber"
+                [(ngModel)]="phoneNumber"
+                name="phoneNumber"
+                required
+                minlength="8"
+                maxlength="20"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#a5b2d2] focus:border-transparent"
+                placeholder="Enter your phone number (minimum 8 characters)"
+              />
+            </div>
+
+            <!-- Address -->
+            <div>
+              <label for="shippingAddress" class="block text-sm font-medium text-gray-700 mb-2">
+                Detailed Shipping Address <span class="text-red-500">*</span>
+              </label>
+              <textarea
+                id="shippingAddress"
+                [(ngModel)]="shippingAddress"
+                name="shippingAddress"
+                required
+                rows="5"
+                maxlength="500"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#a5b2d2] focus:border-transparent resize-y"
+                placeholder="Enter your complete detailed address including:&#10;• Street name and number&#10;• Building/Floor/Apartment&#10;• Landmarks (if any)&#10;• Any additional delivery instructions"
+              ></textarea>
+              <p class="text-xs text-gray-500 mt-1">Please provide as much detail as possible for accurate delivery</p>
+            </div>
+
+            <!-- City Selection -->
+            <div>
+              <label for="cityId" class="block text-sm font-medium text-gray-700 mb-2">
+                City <span class="text-red-500">*</span>
+              </label>
+              <select
+                id="cityId"
+                [(ngModel)]="cityId"
+                name="cityId"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#a5b2d2] focus:border-transparent"
+              >
+                <option value="0">Select a city</option>
+                @for (city of cities(); track city.id) {
+                  <option [value]="city.id">{{ city.name }}</option>
+                }
+              </select>
+            </div>
+
+            <!-- Customer Notes -->
+            <div>
+              <label for="customerNotes" class="block text-sm font-medium text-gray-700 mb-2">
+                Additional Notes (Optional)
+              </label>
+              <textarea
+                id="customerNotes"
+                [(ngModel)]="customerNotes"
+                name="customerNotes"
+                rows="3"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#a5b2d2] focus:border-transparent"
+                placeholder="Any special instructions for delivery"
+              ></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="pt-4">
+              <button
+                type="submit"
+                [disabled]="isLoading()"
+                class="w-full bg-[#a5b2d2] hover:bg-[#8a9bd6] text-white px-8 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                @if (isLoading()) {
+                  <span>Processing...</span>
+                } @else {
+                  <span>Place Order</span>
+                }
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    } @else if (isLoading()) {
+      <!-- Loading State -->
+      <div class="max-w-md mx-auto text-center">
+        <div class="mb-8">
+          <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-spinner fa-spin text-blue-500 text-2xl"></i>
+          </div>
+        </div>
+        <h1 class="text-2xl font-bold text-gray-800 mb-4">Processing Your Order...</h1>
+        <p class="text-gray-600 mb-6">Please wait while we create your order.</p>
+      </div>
+    } @else if (errorMessage()) {
+      <!-- Error State -->
+      <div class="max-w-md mx-auto text-center">
+        <div class="mb-8">
+          <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
+          </div>
+        </div>
+        <h1 class="text-2xl font-bold text-gray-800 mb-4">Order Failed</h1>
+        <p class="text-red-600 mb-6">{{ errorMessage() }}</p>
+        <button 
+          (click)="showForm.set(true)"
+          class="bg-[#a5b2d2] hover:bg-[#8a9bd6] text-white px-8 py-3 rounded-lg font-semibold transition-colors">
+          Try Again
+        </button>
+      </div>
+    } @else {
+      <!-- Success State -->
+      <div class="max-w-md mx-auto text-center">
+        <div class="mb-8">
+          <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-check text-green-500 text-2xl"></i>
+          </div>
+        </div>
+
+        <h1 class="text-2xl font-bold text-gray-800 mb-4">Order Confirmed!</h1>
+        <p class="text-gray-600 mb-6">Thank you for your purchase. Your order has been successfully placed.</p>
+
+        <div class="bg-white rounded-xl p-6 shadow-lg mb-8">
+          <p class="text-gray-700 mb-2">Your order number is:</p>
+          <p class="text-[#a5b2d2] font-bold text-xl">{{ orderNumber() }}</p>
+        </div>
+
+        <button 
+          (click)="backToHome()"
+          class="bg-[#a5b2d2] hover:bg-[#8a9bd6] text-white px-8 py-3 rounded-lg font-semibold transition-colors">
+          Continue Shopping
+        </button>
+      </div>
+    }
+
+  </div>
+</section>

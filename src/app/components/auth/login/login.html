@@ -1,0 +1,74 @@
+<div
+  class="min-h-screen bg-gradient-to-br from-[var(--secondary)] via-[var(--background)] to-[var(--secondary)] dark:from-[var(--bg-primary)] dark:via-[var(--bg-secondary)] dark:to-[var(--bg-primary)] flex items-center justify-center p-6 transition-all duration-500" style="transition-timing-function: var(--ease-smooth);">
+  <div class="bg-[var(--bg-card)] rounded-2xl shadow-2xl p-8 md:p-10 w-full max-w-md border-2 border-[var(--border-color)] transition-all duration-500" style="transition-timing-function: var(--ease-smooth); box-shadow: 0 20px 50px var(--shadow-xl);">
+
+    <div class="text-center mb-8">
+      <div class="flex items-center justify-center gap-3 text-2xl font-bold text-[var(--text-primary)] mb-4">
+        <div class="bg-[var(--accent)]/20 rounded-full p-3 border-2 border-[var(--accent)] transform hover:rotate-12 transition-all duration-400" style="transition-timing-function: var(--ease-elastic);">
+          <i class="fas fa-heartbeat text-[var(--accent)]"></i>
+        </div>
+        <span>Care Zone</span>
+      </div>
+      <h2 class="text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-2">Welcome Back</h2>
+      <p class="text-[var(--text-secondary)]">Please login to your account</p>
+    </div>
+    @if(success){
+    <div class="p-3 mb-4 text-sm text-green-800 rounded-lg border-2 border-green-400 bg-green-50 shadow-md" role="alert">
+      <i class="fas fa-check-circle mr-2"></i>
+      <span class="font-medium">Account created successfully!</span>
+    </div>
+    }
+
+    <form class="space-y-6" (ngSubmit)="onLogin()">
+
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+        <div class="relative">
+          <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+          <input type="email" id="email" [(ngModel)]="email" name="email" placeholder="Enter your email" required
+            class="w-full pl-10 pr-4 py-3 bg-[var(--bg-primary)] border-2 border-[var(--border-color)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] transition-all duration-300 text-[var(--text-primary)]" style="transition-timing-function: var(--ease-smooth);">
+        </div>
+      </div>
+
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+        <div class="relative">
+          <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+          <input [type]="showPassword ? 'text' : 'password'" id="password" [(ngModel)]="password" name="password"
+            placeholder="Enter your password" required
+            class="w-full pl-10 pr-12 py-3 bg-[var(--bg-primary)] border-2 border-[var(--border-color)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] transition-all duration-300 text-[var(--text-primary)]" style="transition-timing-function: var(--ease-smooth);">
+          <i class="fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer hover:text-gray-600"
+            (click)="togglePasswordVisibility()">
+          </i>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <label class="flex items-center space-x-2 cursor-pointer">
+          <input type="checkbox" name="rememberMe"
+            class="w-4 h-4 text-[var(--accent)] rounded focus:ring-[var(--accent)] border-2 border-[var(--secondary)]">
+          <span class="text-sm text-[var(--neutral)]">Remember me</span>
+        </label>
+        <a href="#"
+          class="text-sm text-[var(--accent)] hover:text-[var(--primary)] transition-colors duration-200 font-medium">Forgot
+          password?</a>
+      </div>
+
+      <button type="submit"
+        class="w-full bg-[var(--primary)] hover:bg-[var(--accent)] text-white py-3 px-4 rounded-lg font-semibold transform hover:scale-110 focus:ring-4 focus:ring-[var(--accent)]/50 shadow-lg hover:shadow-2xl" style="transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);">
+        <i class="fas fa-sign-in-alt mr-2"></i>Login
+      </button>
+
+    </form>
+
+    <div class="text-center mt-6">
+      <p class="text-[var(--neutral)]">
+        Don't have an account?
+        <a [routerLink]="['/register']"
+          class="text-[var(--accent)] font-semibold hover:text-[var(--primary)] transition-colors duration-200 ml-1">Sign
+          Up</a>
+      </p>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,168 @@
+<div class="min-h-screen bg-gradient-to-br from-[var(--secondary)] via-[var(--background)] to-[var(--secondary)] dark:from-[var(--bg-primary)] dark:via-[var(--bg-secondary)] dark:to-[var(--bg-primary)] flex items-center justify-center p-6 transition-all duration-500" style="transition-timing-function: var(--ease-smooth);">
+  <div class="bg-[var(--bg-card)] p-8 md:p-10 w-full max-w-md shadow-2xl border-2 border-[var(--border-color)] rounded-2xl transition-all duration-500" style="transition-timing-function: var(--ease-smooth); box-shadow: 0 20px 50px var(--shadow-xl);">
+
+    <div class="text-center mb-8">
+      <div class="flex items-center justify-center gap-3 text-2xl font-bold text-[var(--text-primary)] mb-4">
+        <div class="bg-[var(--accent)]/20 rounded-full p-3 border-2 border-[var(--accent)] transform hover:rotate-12 transition-all duration-400" style="transition-timing-function: var(--ease-elastic);">
+          <i class="fas fa-heartbeat text-[var(--accent)]"></i>
+        </div>
+        <span>Care Zone</span>
+      </div>
+      <h2 class="text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-2">Create Account</h2>
+      <p class="text-[var(--text-secondary)]">Please register to login</p>
+    </div>
+    @if(error()){
+    <div class="p-3 mb-4 text-sm text-red-800 rounded-lg border-2 border-red-400 bg-red-50 shadow-md" role="alert">
+      <i class="fas fa-exclamation-circle mr-2"></i>
+      <span class="font-medium">{{error()}}</span>
+    </div>
+
+    }
+    <form class="space-y-6" (ngSubmit)="register()" [formGroup]=" formGroup">
+
+      <div>
+        <label for="Fname" class="block text-sm font-medium text-[var(--text-primary)] mb-1">First Name</label>
+        <input type="text" id="Fname" name="Fname" placeholder="Enter your first name"
+          class="w-full placeholder:text-[var(--text-muted)] px-4 py-3 bg-[var(--bg-primary)] border-2 border-[var(--border-color)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] transition-all duration-300 text-[var(--text-primary)]" style="transition-timing-function: var(--ease-smooth);"
+          formControlName="firstName" [ngClass]="{
+      'border-[var(--accent)]': firstName?.valid && (firstName?.touched || firstName?.dirty),
+      'border-red-500': firstName?.invalid && (firstName?.touched || firstName?.dirty)
+  }">
+        @if(firstName?.invalid && (firstName?.touched || firstName?.dirty)){
+        <span class="text-red-600 text-sm"> first name is required </span>
+        }
+      </div>
+
+      <div>
+        <label for="Lname" class="block text-sm font-medium text-[var(--text-primary)] mb-1">Last Name</label>
+        <input type="text" id="Lname" name="Lname" placeholder="Enter your last name"
+          class="w-full placeholder:text-[var(--text-muted)] px-4 py-3 bg-[var(--bg-primary)] border-2 border-[var(--border-color)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] transition-all duration-300 text-[var(--text-primary)]" style="transition-timing-function: var(--ease-smooth);"
+          formControlName="lastName" [ngClass]="{
+      'border-[var(--accent)]': lastName?.valid && (lastName?.touched || lastName?.dirty),
+      'border-red-500': lastName?.invalid && (lastName?.touched || lastName?.dirty)
+  }">
+        @if(lastName?.invalid && (lastName?.touched || lastName?.dirty)){
+        <span class="text-red-600 text-sm"> last name is required </span>
+        }
+      </div>
+
+      <div>
+        <label for="email" class="block text-sm font-medium text-[var(--text-primary)] mb-1">Email</label>
+        <div class="relative">
+          <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-muted)]"></i>
+          <input type="email" id="email" name="email" placeholder="Enter your email"
+            class="w-full pl-10 pr-4 py-3 bg-[var(--bg-primary)] border-2 border-[var(--border-color)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] transition-all duration-300 placeholder:text-[var(--text-muted)] text-[var(--text-primary)]" style="transition-timing-function: var(--ease-smooth);"
+            formControlName="email" [ngClass]="{
+      'border-[var(--accent)]': email?.valid && (email?.touched || email?.dirty),
+      'border-red-500': email?.invalid && (email?.touched || email?.dirty)
+  }">
+        </div>
+        @if(email?.hasError('required') && (email?.touched || email?.dirty)){
+        <span class="text-red-500 text-sm">email is required</span>
+        }
+
+        @if(email?.hasError('email') && (email?.touched || email?.dirty)){
+        <span class="text-red-500 text-sm">Please enter a valid email</span>
+        }
+      </div>
+
+      <div>
+        <label for="password" class="block text-sm font-medium text-[var(--text-primary)] mb-1">Password</label>
+        <div class="relative">
+          <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-muted)]"></i>
+          <input [type]="showPassword ? 'text' : 'password'" id="password" name="password" #passinput
+            (input)="confirmPass(passinput.value , confirminput.value)" placeholder="Enter your password"
+            class="w-full pl-10 pr-12 py-3 bg-[var(--bg-primary)] border-2 border-[var(--border-color)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] transition-all duration-300 placeholder:text-[var(--text-muted)] text-[var(--text-primary)]" style="transition-timing-function: var(--ease-smooth);"
+            formControlName="password" [ngClass]="{
+      'border-[var(--accent)]': password?.valid && (password?.touched || password?.dirty),
+      'border-red-500': password?.invalid && (password?.touched || password?.dirty)
+  }">
+
+          <i class="fas absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--neutral)] cursor-pointer hover:text-[var(--accent)] transition-colors duration-200"
+            (click)="togglePasswordVisibility()" [ngClass]="{'fa-eye' : showPassword,' fa-eye-slash ': !showPassword}">
+          </i>
+        </div>
+        @if(password?.hasError('required') && (password?.touched || password?.dirty)){
+        <span class="text-red-500 text-sm">password is required</span>
+        }
+
+        @if(password?.hasError('pattern') && (password?.touched || password?.dirty)){
+        <span class="text-red-500 text-sm">
+          password must contain uppercase, lowercase, number (min 6 chars)
+        </span>
+        }
+      </div>
+
+      <div>
+        <label for="confirmPassword" class="block text-sm font-medium text-[var(--text-primary)] mb-1">confirm Password</label>
+        <div class="relative">
+          <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-muted)]"></i>
+          <input [type]="showPasswordConfirm ? 'text' : 'password'" id="confirmPassword" name="password" #confirminput
+            (input)="confirmPass(passinput.value , confirminput.value)" placeholder="Confirm your password"
+            class="w-full pl-10 pr-12 py-3 bg-[var(--bg-primary)] border-2 border-[var(--border-color)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] transition-all duration-300 placeholder:text-[var(--text-muted)] text-[var(--text-primary)]" style="transition-timing-function: var(--ease-smooth);"
+            formControlName="confirmPassword" [ngClass]="{
+      'border-[var(--accent)]': isConfirm == true ,
+      'border-red-500': (isConfirm  == false && confirminput.value.length >= 1) ||(confirmPassword?.invalid && (confirmPassword?.touched || confirmPassword?.dirty)),
+  }">
+          <i class="fas absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--neutral)] cursor-pointer hover:text-[var(--accent)] transition-colors duration-200"
+            (click)="togglePasswordVisibilityConfirm()"
+            [ngClass]="{'fa-eye' : showPasswordConfirm,' fa-eye-slash ': !showPasswordConfirm}">
+          </i>
+        </div>
+        @if(confirmPassword?.invalid && (confirmPassword?.touched || confirmPassword?.dirty)){
+        <span class="text-red-600 text-sm"> password is required </span>}
+        @if (isConfirm == true){
+        <span class="text-green-600 text-sm"> password match
+        </span>
+        } @else if (isConfirm == false && confirminput.value.length >= 1) {
+        <span class="text-red-600 text-sm"> password didn't match
+        </span>
+        }
+
+      </div>
+
+      <div>
+        <label for="phone" class="block text-sm font-medium text-[var(--text-primary)] mb-1">Phone</label>
+        <div class="relative">
+          <i class="fas fa-phone absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-muted)]"></i>
+          <input type="text" id="phone" name="phone" placeholder="Enter your phone number"
+            class="w-full pl-10 pr-4 py-3 bg-[var(--bg-primary)] border-2 border-[var(--border-color)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] transition-all duration-300 placeholder:text-[var(--text-muted)] text-[var(--text-primary)]" style="transition-timing-function: var(--ease-smooth);"
+            formControlName="phoneNumber" [ngClass]="{
+      'border-[var(--accent)]': phone?.valid && (phone?.touched || phone?.dirty),
+      'border-red-500': phone?.invalid && (phone?.touched || phone?.dirty)
+  }">
+        </div>
+        @if(phone?.hasError('required') && (phone?.touched || phone?.dirty)){
+        <span class="text-red-500 text-sm">Phone number is required</span>
+        }
+
+        @if(phone?.hasError('pattern') && (phone?.touched || phone?.dirty)){
+        <span class="text-red-500 text-sm">Must be a valid Egyptian number </span>
+        }
+      </div>
+
+      <button type="submit"
+        class="w-full bg-[var(--primary)] hover:bg-[var(--accent)] text-white py-3 px-4 rounded-lg font-semibold transform hover:scale-110 focus:ring-4 focus:ring-[var(--accent)]/50 shadow-lg hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="isLoading"
+        style="transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);">
+        @if(!isLoading){
+        <span><i class="fas fa-user-plus mr-2"></i>Register</span>
+        }
+        @if(isLoading){
+        <span><i class="fas fa-spinner fa-spin mr-2"></i>Loading...</span>
+        }
+      </button>
+
+
+    </form>
+
+    <div class="text-center mt-6">
+      <p class="text-[var(--text-secondary)]">
+        already have an account?
+        <a routerLink="/login"
+          class="text-[var(--accent)] font-semibold hover:text-[var(--text-primary)] transition-colors duration-300 ml-1" style="transition-timing-function: var(--ease-smooth);">Login</a>
+      </p>
+    </div>
+
+  </div>
+</div>

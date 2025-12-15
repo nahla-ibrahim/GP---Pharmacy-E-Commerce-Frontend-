@@ -1,0 +1,34 @@
+<!-- Note: ProtectedRoute logic should be moved to Router configuration using a canActivate guard -->
+<!-- Example: { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [AdminGuard] } -->
+
+<div class="min-h-screen bg-gray-50 font-sans">
+  <!-- Fixed Navbar -->
+  <!-- Main Content -->
+  <div class="container mx-auto px-4 lg:mt-16">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      @for (item of dashboardItems; track item.route) {
+        <a
+          [routerLink]="item.route"
+          class="bg-white rounded-lg shadow p-5 flex flex-col items-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+        >
+          <!-- Icon Component -->
+          <svg 
+            [class]="'h-8 w-8 ' + item.iconColor + ' mb-2'" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path 
+              stroke-linecap="round" 
+              stroke-linejoin="round" 
+              stroke-width="2" 
+              [attr.d]="getIconPath(item.iconName)"
+            ></path>
+          </svg>
+          <span class="text-gray-700 font-semibold text-center text-base">{{ item.label }}</span>
+        </a>
+      }
+    </div>
+  </div>
+</div>

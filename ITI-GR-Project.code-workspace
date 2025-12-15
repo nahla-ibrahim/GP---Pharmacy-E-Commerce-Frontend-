@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../ITI-GR-Project-backened"
+		},
+		{
+			"path": "../skincare-ai-Back"
+		},
+		{
+			"path": "../skincare-ai-front"
+		}
+	],
+	"settings": {}
+}

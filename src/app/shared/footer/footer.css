@@ -1,0 +1,10 @@
+/* Footer styling - matches navbar colors in dark mode */
+/* Light mode: gradient background (from-[var(--primary)] to-[var(--neutral)]) */
+/* Dark mode: uses var(--bg-overlay) like navbar */
+
+/* Ensure footer uses same background as navbar in dark mode */
+html.dark footer {
+  background: var(--bg-overlay) !important;
+  background-image: none !important;
+}
+

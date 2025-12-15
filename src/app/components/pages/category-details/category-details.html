@@ -1,0 +1,1039 @@
+<div
+  class="mx-auto px-0.5 sm:px-4 relative mt-[6vh] mb-[5vh]"
+  style="font-family: 'Alexandria', sans-serif"
+>
+  <!-- Category Name Header -->
+  <div class="text-center mb-8 mt-10 sm:mt-0">
+    <h1
+      class="text-2xl sm:text-3xl font-medium text-gray-800 py-1"
+      style="font-family: 'Alexandria', sans-serif"
+    >
+      {{ getCategoryName() }}
+    </h1>
+  </div>
+
+  <!-- Mobile Filter and Sort Buttons -->
+  <div
+    class="md:hidden fixed bottom-20 left-1/2 transform -translate-x-1/2 flex gap-2"
+    style="z-index: 47"
+  >
+    <button
+      class="text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2"
+      style="background-color: #D1A557;"
+      (click)="showSort.set(true)"
+    >
+      <span
+        class="font-alexandria font-light"
+        [class.text-[17.5px]]="isArabic"
+        >{{ isArabic ? 'ترتيب' : 'Sort' }}</span
+      >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-4 w-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
+        />
+      </svg>
+    </button>
+    <button
+      class="text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2"
+      style="background-color: #D1A557;"
+      (click)="showFilters.set(true)"
+    >
+      <span class="font-alexandria font-light">{{ isArabic ? 'تصفية' : 'Filter' }}</span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-4 w-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+        />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile Overlays -->
+  <div
+    class="fixed inset-0 z-[60] transition-opacity duration-300 md:hidden overflow-hidden"
+    [class.opacity-100]="showFilters() || showSort()"
+    [class.opacity-0]="!(showFilters() || showSort())"
+    [class.pointer-events-none]="!(showFilters() || showSort())"
+    (click)="showFilters.set(false); showSort.set(false)"
+    [style.background-color]="(showFilters() || showSort()) ? 'rgba(0, 0, 0, 0.05)' : 'transparent'"
+    style="touch-action: none"
+  ></div>
+
+  <!-- Sort Sidebar - Mobile Only -->
+  <div
+    class="fixed md:hidden top-0 h-screen w-3/4 bg-white z-[70] transform transition-transform duration-300 ease-in-out"
+    [class.right-0]="isArabic"
+    [class.left-0]="!isArabic"
+    [class.translate-x-0]="showSort()"
+    [class.translate-x-full]="!showSort() && isArabic"
+    [class.-translate-x-full]="!showSort() && !isArabic"
+  >
+    <div class="bg-white font-semibold shadow-lg rounded-lg p-4 sticky top-6 h-auto">
+      <!-- Mobile Close Button -->
+      <div class="flex justify-between items-center mb-4">
+        <h2 [class.order-2]="isArabic" [class.order-1]="!isArabic" class="text-lg font-semibold">
+          {{ isArabic ? 'الترتيب' : 'Sort' }}
+        </h2>
+        <button
+          (click)="showSort.set(false)"
+          [class.order-1]="isArabic"
+          [class.order-2]="!isArabic"
+          class="text-gray-500 hover:text-gray-700"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Sort Options -->
+      <div class="space-y-2">
+        <button
+          (click)="handleSort('newest'); showSort.set(false)"
+          class="w-full px-4 py-3 rounded transition-colors duration-150"
+          [class.text-right]="isArabic"
+          [class.text-left]="!isArabic"
+          [style.background-color]="currentSort() === 'newest' ? '#D1A557' : ''"
+          [class.text-white]="currentSort() === 'newest'"
+          [class.hover:bg-gray-50]="currentSort() !== 'newest'"
+        >
+          {{ isArabic ? 'الأحدث أولاً' : 'Newest first' }}
+        </button>
+        <button
+          (click)="handleSort('oldest'); showSort.set(false)"
+          class="w-full px-4 py-3 rounded transition-colors duration-150"
+          [class.text-right]="isArabic"
+          [class.text-left]="!isArabic"
+          [style.background-color]="currentSort() === 'oldest' ? '#D1A557' : ''"
+          [class.text-white]="currentSort() === 'oldest'"
+          [class.hover:bg-gray-50]="currentSort() !== 'oldest'"
+        >
+          {{ isArabic ? 'الأقدم أولاً' : 'Oldest first' }}
+        </button>
+        <button
+          (click)="handleSort('price_asc'); showSort.set(false)"
+          class="w-full px-4 py-3 rounded transition-colors duration-150"
+          [class.text-right]="isArabic"
+          [class.text-left]="!isArabic"
+          [style.background-color]="currentSort() === 'price_asc' ? '#D1A557' : ''"
+          [class.text-white]="currentSort() === 'price_asc'"
+          [class.hover:bg-gray-50]="currentSort() !== 'price_asc'"
+        >
+          {{ isArabic ? 'السعر: من الأقل للأعلى' : 'Price: low to high' }}
+        </button>
+        <button
+          (click)="handleSort('price_desc'); showSort.set(false)"
+          class="w-full px-4 py-3 rounded transition-colors duration-150"
+          [class.text-right]="isArabic"
+          [class.text-left]="!isArabic"
+          [style.background-color]="currentSort() === 'price_desc' ? '#D1A557' : ''"
+          [class.text-white]="currentSort() === 'price_desc'"
+          [class.hover:bg-gray-50]="currentSort() !== 'price_desc'"
+        >
+          {{ isArabic ? 'السعر: من الأعلى للأقل' : 'Price: high to low' }}
+        </button>
+        <button
+          (click)="handleSort('name_asc'); showSort.set(false)"
+          class="w-full px-4 py-3 rounded transition-colors duration-150"
+          [class.text-right]="isArabic"
+          [class.text-left]="!isArabic"
+          [style.background-color]="currentSort() === 'name_asc' ? '#D1A557' : ''"
+          [class.text-white]="currentSort() === 'name_asc'"
+          [class.hover:bg-gray-50]="currentSort() !== 'name_asc'"
+        >
+          {{ isArabic ? 'الاسم: من أ إلى ي' : 'Name: A to Z' }}
+        </button>
+        <button
+          (click)="handleSort('name_desc'); showSort.set(false)"
+          class="w-full px-4 py-3 rounded transition-colors duration-150"
+          [class.text-right]="isArabic"
+          [class.text-left]="!isArabic"
+          [style.background-color]="currentSort() === 'name_desc' ? '#D1A557' : ''"
+          [class.text-white]="currentSort() === 'name_desc'"
+          [class.hover:bg-gray-50]="currentSort() !== 'name_desc'"
+        >
+          {{ isArabic ? 'الاسم: من ي إلى أ' : 'Name: Z to A' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-col" [class.md:flex-row-reverse]="isArabic" [class.md:flex-row]="!isArabic">
+    <!-- Filters Sidebar -->
+    <div
+      class="fixed md:sticky top-0 h-screen md:h-[calc(100vh-18vh)] w-3/4 md:w-1/4 lg:w-1/5 bg-white md:bg-transparent z-[70] md:z-20 transform transition-transform duration-300 ease-in-out md:transform-none md:transition-none overflow-y-auto"
+      [class.right-0]="isArabic"
+      [class.left-0]="!isArabic"
+      [class.md:pl-6]="isArabic"
+      [class.md:pr-6]="!isArabic"
+      [class.translate-x-0]="showFilters()"
+      [class.translate-x-full]="!showFilters() && isArabic"
+      [class.-translate-x-full]="!showFilters() && !isArabic"
+      [class.md:translate-x-0]="true"
+    >
+      <div class="bg-white font-semibold shadow-lg rounded-lg p-4 sticky top-6 md:top-2 h-auto">
+        <!-- Mobile Close Button -->
+        <div class="flex justify-between items-center mb-4 md:hidden">
+          <h2 class="text-lg font-semibold">{{ isArabic ? 'الفلاتر' : 'Filters' }}</h2>
+          <button (click)="showFilters.set(false)" class="text-gray-500 hover:text-gray-700">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Category Header -->
+        <div class="">
+          @if (isLoading()) {
+            <div class="flex justify-center items-center h-32">
+              <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2" style="border-color: #D1A557;"></div>
+            </div>
+          } @else if (category()) {
+            <h1 class="text-xl font-bold text-gray-800 text-center"></h1>
+          } @else {
+            <div class="text-center">{{ isArabic ? 'الفئة غير موجودة' : 'Category not found' }}</div>
+          }
+        </div>
+
+        <!-- Brand Filter Dropdown -->
+        @if (brands().length > 0) {
+          <div class="mb-4" #brandDropdownRef>
+            <button
+              class="w-full flex justify-between items-center px-2 py-2 bg-gray-100 rounded transition-colors duration-500 hover:bg-gray-200 font-medium"
+              [class.flex-row-reverse]="isArabic"
+              [class.flex-row]="!isArabic"
+              (click)="showBrandDropdown.set(!showBrandDropdown())"
+            >
+              <span class="flex-1" [class.text-right]="isArabic" [class.text-left]="!isArabic">
+                {{
+                  selectedBrand()
+                    ? isArabic
+                      ? selectedBrand()!.nameAr
+                      : selectedBrand()!.nameEn
+                    : isArabic
+                      ? 'جميع البراندات'
+                      : 'All Brands'
+                }}
+              </span>
+              <svg
+                class="w-4 h-4 transition-transform duration-500"
+                [class.rotate-180]="showBrandDropdown()"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+            <div
+              class="bg-white border rounded shadow mt-1 transition-all duration-500 ease-in-out overflow-hidden"
+              [class.max-h-96]="showBrandDropdown()"
+              [class.opacity-100]="showBrandDropdown()"
+              [class.scale-100]="showBrandDropdown()"
+              [class.max-h-0]="!showBrandDropdown()"
+              [class.opacity-0]="!showBrandDropdown()"
+              [class.scale-95]="!showBrandDropdown()"
+              [class.pointer-events-none]="!showBrandDropdown()"
+              style="min-width: 100%"
+            >
+              <div class="max-h-80 overflow-y-auto">
+                <button
+                  (click)="resetBrandFilter(); showBrandDropdown.set(false)"
+                  class="block w-full px-4 py-2 rounded transition-colors duration-150 font-medium"
+                  [class.text-right]="isArabic"
+                  [class.text-left]="!isArabic"
+                  [style.background-color]="!selectedBrand() ? '#D1A557' : ''"
+                  [class.text-white]="!selectedBrand()"
+                  [class.hover:bg-gray-50]="selectedBrand()"
+                >
+                  {{ isArabic ? 'جميع الماركات' : 'All Brands' }}
+                </button>
+                @for (brand of brands(); track brand.id) {
+                  <button
+                    (click)="selectedBrand.set(brand); showBrandDropdown.set(false)"
+                    class="block w-full px-4 py-2 rounded transition-colors duration-150 font-medium"
+                    [class.text-right]="isArabic"
+                    [class.text-left]="!isArabic"
+                    [style.background-color]="selectedBrand()?.id === brand.id ? '#D1A557' : ''"
+                    [class.text-white]="selectedBrand()?.id === brand.id"
+                    [class.hover:bg-gray-50]="selectedBrand()?.id !== brand.id"
+                  >
+                    {{ isArabic ? brand.nameAr : brand.nameEn }}
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Tag Filter Dropdown -->
+        <div class="mb-4" #tagDropdownRef>
+          <button
+            class="w-full flex justify-between items-center px-2 py-2 bg-gray-100 rounded transition-colors duration-500 hover:bg-gray-200 font-medium"
+            [class.flex-row-reverse]="isArabic"
+            [class.flex-row]="!isArabic"
+            (click)="showTagDropdown.set(!showTagDropdown())"
+          >
+            <span class="flex-1" [class.text-right]="isArabic" [class.text-left]="!isArabic">{{
+              isArabic ? 'جميع الأقسام الفرعية' : 'All Sub Categories'
+            }}</span>
+            <svg
+              class="w-4 h-4 transition-transform duration-500"
+              [class.rotate-180]="showTagDropdown()"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+          <div
+            class="bg-white border rounded shadow mt-1 transition-all duration-500 ease-in-out overflow-hidden"
+            [class.max-h-96]="showTagDropdown()"
+            [class.opacity-100]="showTagDropdown()"
+            [class.scale-100]="showTagDropdown()"
+            [class.max-h-0]="!showTagDropdown()"
+            [class.opacity-0]="!showTagDropdown()"
+            [class.scale-95]="!showTagDropdown()"
+            [class.pointer-events-none]="!showTagDropdown()"
+            style="min-width: 100%"
+          >
+            <div class="max-h-80 overflow-y-auto">
+              <button
+                (click)="resetTagFilter(); showTagDropdown.set(false)"
+                class="block w-full px-4 py-2 rounded transition-colors duration-150 font-medium"
+                [class.text-right]="isArabic"
+                [class.text-left]="!isArabic"
+                [style.background-color]="!selectedTag() ? '#D1A557' : ''"
+                [class.text-white]="!selectedTag()"
+                [class.hover:bg-gray-50]="selectedTag()"
+              >
+                {{ isArabic ? 'جميع الأقسام الفرعية' : 'All Sub Categories' }}
+              </button>
+              @for (tag of tags(); track tag.id) {
+                <button
+                  (click)="selectedTag.set(tag); showTagDropdown.set(false)"
+                  class="block w-full px-4 py-2 rounded transition-colors duration-150 font-medium"
+                  [class.text-right]="isArabic"
+                  [class.text-left]="!isArabic"
+                  [style.background-color]="selectedTag()?.id === tag.id ? '#D1A557' : ''"
+                  [class.text-white]="selectedTag()?.id === tag.id"
+                  [class.hover:bg-gray-50]="selectedTag()?.id !== tag.id"
+                >
+                  {{ isArabic ? tag.nameAr : tag.nameEn }}
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Sort Options - Desktop Only -->
+        <div class="mt-6 hidden md:block" #sortDropdownRef>
+          <button
+            class="w-full flex justify-between items-center px-2 py-2 bg-gray-100 rounded transition-colors duration-500 hover:bg-gray-200 font-medium"
+            [class.flex-row-reverse]="isArabic"
+            [class.flex-row]="!isArabic"
+            (click)="showSort.set(!showSort())"
+          >
+            <span class="flex-1" [class.text-right]="isArabic" [class.text-left]="!isArabic">{{
+              isArabic ? 'الترتيب' : 'Sort'
+            }}</span>
+            <svg
+              class="w-4 h-4 transition-transform duration-500"
+              [class.rotate-180]="showSort()"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+          <div
+            class="bg-white border rounded shadow mt-1 transition-all duration-500 ease-in-out overflow-hidden"
+            [class.max-h-96]="showSort()"
+            [class.opacity-100]="showSort()"
+            [class.scale-100]="showSort()"
+            [class.max-h-0]="!showSort()"
+            [class.opacity-0]="!showSort()"
+            [class.scale-95]="!showSort()"
+            [class.pointer-events-none]="!showSort()"
+            style="min-width: 100%"
+          >
+            <button
+              (click)="handleSort('newest'); showSort.set(false)"
+              class="block w-full px-4 py-1.5 rounded transition-colors duration-150 font-medium text-[13px]"
+              [class.text-right]="isArabic"
+              [class.text-left]="!isArabic"
+              [style.background-color]="currentSort() === 'newest' ? '#D1A557' : ''"
+              [class.text-white]="currentSort() === 'newest'"
+              [class.hover:bg-gray-50]="currentSort() !== 'newest'"
+            >
+              {{ isArabic ? 'الأحدث أولاً' : 'Newest first' }}
+            </button>
+            <button
+              (click)="handleSort('oldest'); showSort.set(false)"
+              class="block w-full px-4 py-1.5 rounded transition-colors duration-150 font-medium text-[13px]"
+              [class.text-right]="isArabic"
+              [class.text-left]="!isArabic"
+              [style.background-color]="currentSort() === 'oldest' ? '#D1A557' : ''"
+              [class.text-white]="currentSort() === 'oldest'"
+              [class.hover:bg-gray-50]="currentSort() !== 'oldest'"
+            >
+              {{ isArabic ? 'الأقدم أولاً' : 'Oldest first' }}
+            </button>
+            <button
+              (click)="handleSort('price_asc'); showSort.set(false)"
+              class="block w-full px-4 py-1.5 rounded transition-colors duration-150 font-medium text-[13px]"
+              [class.text-right]="isArabic"
+              [class.text-left]="!isArabic"
+              [style.background-color]="currentSort() === 'price_asc' ? '#D1A557' : ''"
+              [class.text-white]="currentSort() === 'price_asc'"
+              [class.hover:bg-gray-50]="currentSort() !== 'price_asc'"
+            >
+              {{ isArabic ? 'السعر: من الأقل للأعلى' : 'Price: low to high' }}
+            </button>
+            <button
+              (click)="handleSort('price_desc'); showSort.set(false)"
+              class="block w-full px-4 py-1.5 rounded transition-colors duration-150 font-medium text-[13px]"
+              [class.text-right]="isArabic"
+              [class.text-left]="!isArabic"
+              [style.background-color]="currentSort() === 'price_desc' ? '#D1A557' : ''"
+              [class.text-white]="currentSort() === 'price_desc'"
+              [class.hover:bg-gray-50]="currentSort() !== 'price_desc'"
+            >
+              {{ isArabic ? 'السعر: من الأعلى للأقل' : 'Price: high to low' }}
+            </button>
+            <button
+              (click)="handleSort('name_asc'); showSort.set(false)"
+              class="block w-full px-4 py-1.5 rounded transition-colors duration-150 font-medium text-[13px]"
+              [class.text-right]="isArabic"
+              [class.text-left]="!isArabic"
+              [style.background-color]="currentSort() === 'name_asc' ? '#D1A557' : ''"
+              [class.text-white]="currentSort() === 'name_asc'"
+              [class.hover:bg-gray-50]="currentSort() !== 'name_asc'"
+            >
+              {{ isArabic ? 'الاسم: من أ إلى ي' : 'Name: A to Z' }}
+            </button>
+            <button
+              (click)="handleSort('name_desc'); showSort.set(false)"
+              class="block w-full px-4 py-1.5 rounded transition-colors duration-150 font-medium text-[13px]"
+              [class.text-right]="isArabic"
+              [class.text-left]="!isArabic"
+              [style.background-color]="currentSort() === 'name_desc' ? '#D1A557' : ''"
+              [class.text-white]="currentSort() === 'name_desc'"
+              [class.hover:bg-gray-50]="currentSort() !== 'name_desc'"
+            >
+              {{ isArabic ? 'الاسم: من ي إلى أ' : 'Name: Z to A' }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Price Filter -->
+        <div>
+          <h2 class="text-lg font-semibold mb-4" [class.text-right]="isArabic" [class.text-left]="!isArabic">
+            {{ isArabic ? 'نطاق السعر' : 'Price Range' }}
+          </h2>
+          <div class="w-full rounded-lg bg-white" #sliderRef>
+            <div class="relative py-5">
+              <div class="h-2 bg-gray-200 rounded-full">
+                <div
+                  class="absolute h-2 rounded-full"
+                  style="background-color: #D1A557;"
+                  [style.left.%]="(tempMin() / 5000) * 100"
+                  [style.right.%]="100 - (tempMax() / 5000) * 100"
+                ></div>
+              </div>
+
+              <!-- Min Handle -->
+              <div
+                class="absolute w-6 h-6 rounded-full shadow-md cursor-pointer transform -translate-y-1/2 -translate-x-1/2 top-1/2 hover:scale-110 transition-transform z-10 ml-3"
+                style="background-color: #D1A557; border-color: #F3D986;"
+                [style.left.%]="(tempMin() / 5000) * 100"
+                (mousedown)="onSliderMouseDown($event, true)"
+                (touchstart)="onSliderTouchStart($event, true)"
+              ></div>
+
+              <!-- Max Handle -->
+              <div
+                class="absolute w-6 h-6 rounded-full shadow-md cursor-pointer transform -translate-y-1/2 -translate-x-1/2 top-1/2 hover:scale-110 transition-transform z-10 -ml-3"
+                style="background-color: #D1A557; border-color: #F3D986;"
+                [style.left.%]="(tempMax() / 5000) * 100"
+                (mousedown)="onSliderMouseDown($event, false)"
+                (touchstart)="onSliderTouchStart($event, false)"
+              ></div>
+            </div>
+
+            <div class="flex justify-between mt-4">
+              <div class="text-center">
+                <span class="text-gray-500 font-medium text-[12.5px] text-center">{{
+                  isArabic ? 'الحد الأدنى' : 'Min'
+                }}</span>
+                <div class="font-medium text-lg">
+                  {{ tempMin() }} {{ isArabic ? 'جنية' : 'EGP' }}
+                </div>
+              </div>
+              <div class="text-center">
+                <span class="text-gray-500 font-medium text-[12.5px] text-center">{{
+                  isArabic ? 'الحد الأقصى' : 'Max'
+                }}</span>
+                <div class="font-medium text-lg">
+                  {{ tempMax() }} {{ isArabic ? 'جنية' : 'EGP' }}
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 flex justify-between space-x-4">
+              <button
+                (click)="resetPriceFilter()"
+                class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors flex-1 font-['Alexandria'] font-medium text-[10px] sm:text-[11px] whitespace-nowrap"
+              >
+                {{ isArabic ? 'إعادة تعيين' : 'Reset' }}
+              </button>
+              <button
+                (click)="applyPriceFilter()"
+                class="px-4 py-2 text-white rounded-md transition-colors flex-1 font-['Alexandria'] font-medium text-[10px] sm:text-[11px]"
+                style="background-color: #D1A557;"
+                onmouseover="this.style.backgroundColor='#B89A4A'"
+                onmouseout="this.style.backgroundColor='#D1A557'"
+              >
+                {{ isArabic ? 'تطبيق' : 'Apply' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="md:w-[98%] lg:w-full">
+      <!-- Items Count and Active Filters -->
+      <div
+        class="mb-4 flex flex-wrap items-center gap-4"
+        [class.justify-end]="isArabic"
+        [class.justify-start]="!isArabic"
+      >
+        <!-- Items Count -->
+        <div class="text-gray-600 font-medium">
+          <span class="font-['Alexandria']">
+            @if (isArabic) {
+              عدد المنتجات: {{ getActiveProductsCount() }}
+            } @else {
+              Items: {{ getActiveProductsCount() }}
+            }
+          </span>
+        </div>
+
+        <!-- Active Filters -->
+        @if (priceFilterApplied() || selectedTag() || selectedBrand()) {
+          <div class="flex flex-wrap gap-2">
+            @if (priceFilterApplied()) {
+              <div class="bg-gray-100 px-3 py-1 rounded-full flex items-center">
+                <span class="text-sm">
+                  {{ isArabic ? 'السعر:' : 'Price:' }}
+                  {{ counterService.minSearch() }}-{{ counterService.maxSearch() }}
+                  {{ isArabic ? 'جنية' : 'EGP' }}
+                </span>
+                <button (click)="resetPriceFilter()" class="ml-1 text-gray-500" style="--hover-color: #D1A557;" onmouseover="this.style.color='#D1A557'" onmouseout="this.style.color='#6b7280'">
+                  &times;
+                </button>
+              </div>
+            }
+            @if (selectedTag()) {
+              <div
+                class="bg-gray-100 px-3 py-1 rounded-full flex items-center"
+                [class.flex-row-reverse]="isArabic"
+                [class.flex-row]="!isArabic"
+                style="font-family: 'Alexandria', sans-serif"
+              >
+                <span class="text-sm font-medium">
+                  {{ isArabic ? 'العلامة:' : 'Tag:' }}
+                  {{ isArabic ? selectedTag()!.nameAr : selectedTag()!.nameEn }}
+                </span>
+                <button
+                  (click)="resetTagFilter()"
+                  [class.mr-1]="isArabic"
+                  [class.ml-1]="!isArabic"
+                  class="text-gray-500"
+                  onmouseover="this.style.color='#D1A557'" onmouseout="this.style.color='#6b7280'"
+                >
+                  &times;
+                </button>
+              </div>
+            }
+            @if (selectedBrand()) {
+              <div
+                class="bg-gray-100 px-3 py-1 rounded-full flex items-center"
+                [class.flex-row-reverse]="isArabic"
+                [class.flex-row]="!isArabic"
+                style="font-family: 'Alexandria', sans-serif"
+              >
+                <span
+                  class="text-sm font-medium"
+                  [attr.dir]="isArabic ? 'rtl' : 'ltr'"
+                >
+                  {{ isArabic ? 'البراند:' : 'Brand:' }}
+                  {{ isArabic ? selectedBrand()!.nameAr : selectedBrand()!.nameEn }}
+                </span>
+                <button
+                  (click)="resetBrandFilter()"
+                  [class.mr-1]="isArabic"
+                  [class.ml-1]="!isArabic"
+                  class="text-gray-500"
+                  onmouseover="this.style.color='#D1A557'" onmouseout="this.style.color='#6b7280'"
+                >
+                  &times;
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Products Grid -->
+      @if (!isLoading()) {
+        <div
+          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2"
+          [attr.dir]="isArabic ? 'rtl' : 'ltr'"
+        >
+          @if (filteredProducts().length > 0) {
+            @for (
+              product of getActiveFilteredProducts();
+              track product.id
+            ) {
+              <!-- Custom Product Card for Category Page -->
+              <div
+                class="justify-between flex flex-col h-full border-2 border-gray-200 rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden bg-white group transition-all duration-400 cursor-pointer"
+                (click)="router.navigate(['/product-details', product.id])"
+              >
+                <div
+                  class="rounded-t-lg bg-gradient-to-br from-gray-100 to-white w-full h-48 relative overflow-hidden"
+                >
+                  @if (getProductImage(product)) {
+                    <img
+                      [src]="getProductImage(product)"
+                      [alt]="getProductName(product)"
+                      class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110 p-2"
+                      loading="lazy"
+                      (error)="$event.target.src='assets/images/logo.png'"
+                    />
+                  } @else {
+                    <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                      <i class="fa-solid fa-image text-gray-400 text-4xl"></i>
+                    </div>
+                  }
+                  
+                  <!-- Wishlist Icon - Top Left -->
+                  <button
+                    (click)="
+                      $event.stopPropagation();
+                      addToWishlist(product.skuId || product.id)
+                    "
+                    class="absolute top-2 left-2 z-20 bg-white/80 hover:bg-white rounded-full p-2 shadow-md transition-all duration-200 hover:scale-110"
+                    [style.background-color]="favServ.isFav(product.id)() ? '#F3D986' : ''"
+                  >
+                    <i
+                      class="fa-heart text-sm"
+                      [ngClass]="favServ.isFav(product.id)() ? 'fa-solid' : 'fa-regular'"
+                      style="color: #D1A557;"
+                    ></i>
+                  </button>
+
+                  <!-- Discount Badge - Top Right -->
+                  @if (
+                    getAvailableStock(product) > 0 &&
+                    product.priceBefore &&
+                    product.priceAfter &&
+                    product.priceBefore > product.priceAfter
+                  ) {
+                    <span
+                      class="absolute right-4 top-4 inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold text-white shadow-lg z-10"
+                      style="background-color: #D1A557;"
+                    >
+                      {{ calculateDiscountPercentage(product.priceBefore, product.priceAfter) }}%
+                      {{ isArabic ? 'خصم' : 'Off' }}
+                    </span>
+                  }
+                  
+                  <!-- Out of Stock Badge -->
+                  @if (getAvailableStock(product) <= 0) {
+                    <div
+                      class="absolute top-4 right-2 bg-gray-600 text-white text-xs font-semibold px-2 py-1 rounded-md z-10"
+                      style="font-family: Alexandria, sans-serif; font-weight: 500"
+                    >
+                      {{ isArabic ? 'غير متوفر' : 'Out of Stock' }}
+                    </div>
+                  }
+                </div>
+                <div class="mt-3 mx-3">
+                  <button
+                    class="text-lg font-bold text-left text-gray-800 transition-all duration-300 w-full"
+                    onmouseover="this.style.color='#D1A557'" onmouseout="this.style.color='#1f2937'"
+                    (click)="
+                      $event.stopPropagation();
+                      router.navigate(['/product-details', product.id])
+                    "
+                  >
+                    {{ getProductName(product) }}
+                  </button>
+                  @if (getProductDescription(product)) {
+                    <p
+                      class="text-xs text-gray-500 mt-1 line-clamp-2"
+                      [class.text-right]="isArabic"
+                      [class.text-left]="!isArabic"
+                      [attr.dir]="isArabic ? 'rtl' : 'ltr'"
+                    >
+                      {{ getProductDescription(product) }}
+                    </p>
+                  }
+                </div>
+                <div class="flex justify-between items-center my-6 mx-3">
+                  <div class="text-start">
+                    @if (product.priceBefore && product.priceBefore > (product.priceAfter || product.price)) {
+                      <span class="line-through text-gray-400 text-sm">
+                        {{ formatPrice(product.priceBefore) }}
+                      </span>
+                    }
+                    <p class="text-lg md:text-xl font-bold text-gray-800">
+                      {{ formatPrice(product.priceAfter || product.price) }}
+                    </p>
+                  </div>
+                  <div class="gap-1 flex justify-between items-center">
+                    <button
+                      (click)="
+                        $event.stopPropagation();
+                        addToCartLocal(product.skuId || product.id)
+                      "
+                      [disabled]="getAvailableStock(product) <= 0 || loadingCartItems().has(product.skuId || product.id)"
+                      class="disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    >
+                      <i class="fa-solid fa-cart-arrow-down text-xl" style="color: #D1A557;" onmouseover="this.style.color='#B89A4A'" onmouseout="this.style.color='#D1A557'"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            }
+          } @else {
+            <div
+              class="col-span-2 sm:col-span-3 md:col-span-4 lg:col-span-6 flex flex-col justify-center items-center min-h-[60vh] w-full mx-auto text-center"
+              style="font-family: 'Alexandria', sans-serif"
+            >
+              <p class="text-gray-700 mb-3 font-medium text-xs sm:text-sm md:text-base">
+                {{
+                  isArabic
+                    ? 'لا توجد منتجات في هذه الفئة\nلم يتم العثور على منتجات في هذه الفئة'
+                    : 'No Products in This Category\nNo products were found in this category'
+                }}
+              </p>
+              @if (priceFilterApplied() || selectedTag() || selectedBrand()) {
+                <button
+                  (click)="resetPriceFilter(); resetTagFilter(); resetBrandFilter()"
+                  class="mt-3 text-white px-6 py-2 rounded-md transition font-medium text-xs sm:text-sm md:text-base"
+                  style="background-color: #D1A557;"
+                  onmouseover="this.style.backgroundColor='#B89A4A'"
+                  onmouseout="this.style.backgroundColor='#D1A557'"
+                >
+                  {{ isArabic ? 'إعادة تعيين' : 'Reset Filters' }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Pagination Controls -->
+      @if (!isLoading() && totalPages() > 1) {
+        <div
+          class="flex flex-wrap items-center justify-center gap-2 mt-8 mb-4"
+          [class.flex-row-reverse]="isArabic"
+        >
+          <!-- Previous Button -->
+          <button
+            (click)="previousPage()"
+            [disabled]="!hasPrevious()"
+            class="px-4 py-2 rounded-md transition-colors font-medium text-sm pagination-btn"
+            [class.pagination-btn-active]="hasPrevious()"
+            [class.pagination-btn-disabled]="!hasPrevious()"
+            [class.text-white]="hasPrevious()"
+            [class.text-gray-500]="!hasPrevious()"
+            [class.cursor-not-allowed]="!hasPrevious()"
+            style="font-family: 'Alexandria', sans-serif"
+          >
+            {{ isArabic ? 'السابق' : 'Previous' }}
+          </button>
+
+          <!-- Page Numbers -->
+          @for (page of getPageNumbers(); track page) {
+            @if (page === -1) {
+              <span class="px-2 text-gray-500">...</span>
+            } @else {
+              <button
+                (click)="goToPage(page)"
+                class="px-4 py-2 rounded-md transition-colors font-medium text-sm min-w-[40px] pagination-page-btn"
+                [class.pagination-page-btn-active]="currentPage() === page"
+                [class.text-white]="currentPage() === page"
+                [class.bg-gray-100]="currentPage() !== page"
+                [class.text-gray-700]="currentPage() !== page"
+                [class.hover:bg-gray-200]="currentPage() !== page"
+                style="font-family: 'Alexandria', sans-serif"
+              >
+                {{ page }}
+              </button>
+            }
+          }
+
+          <!-- Next Button -->
+          <button
+            (click)="nextPage()"
+            [disabled]="!hasNext()"
+            class="px-4 py-2 rounded-md transition-colors font-medium text-sm pagination-btn"
+            [class.pagination-btn-active]="hasNext()"
+            [class.pagination-btn-disabled]="!hasNext()"
+            [class.text-white]="hasNext()"
+            [class.text-gray-500]="!hasNext()"
+            [class.cursor-not-allowed]="!hasNext()"
+            style="font-family: 'Alexandria', sans-serif"
+          >
+            {{ isArabic ? 'التالي' : 'Next' }}
+          </button>
+
+          <!-- Page Info -->
+          <div class="text-gray-600 text-sm px-4" style="font-family: 'Alexandria', sans-serif">
+            {{ isArabic ? 'صفحة' : 'Page' }} {{ currentPage() }} {{ isArabic ? 'من' : 'of' }}
+            {{ totalPages() }}
+            ({{ totalCount() }} {{ isArabic ? 'منتج' : 'items' }})
+          </div>
+        </div>
+      }
+
+      <!-- Loading indicator -->
+      @if (isLoading()) {
+        <div class="text-center w-full py-10">
+          <div class="flex justify-center items-center h-64">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#D1A557]"></div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Quick View Modal -->
+  @if (isQuickViewOpen() && selectedProduct()) {
+    <div
+      class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[95] p-2 sm:p-4"
+      (click)="handleCloseQuickView()"
+    >
+      <div
+        class="bg-white rounded-lg relative w-full max-w-xs sm:max-w-md md:max-w-lg p-3 sm:p-6"
+        (click)="$event.stopPropagation()"
+        style="font-family: 'Alexandria', sans-serif"
+      >
+        <button
+          class="absolute top-1 right-1 sm:top-2 sm:right-2 text-gray-600 hover:text-gray-800 z-10 w-6 h-6 flex items-center justify-center bg-white rounded-full shadow-sm"
+          (click)="handleCloseQuickView()"
+        >
+          <i class="fa-solid fa-times text-xl"></i>
+        </button>
+
+        @if (hasDiscount(selectedProduct())) {
+          <div
+            class="absolute m-4 text-center top-0 left-0 text-white text-[16px] font-normal px-1 py-0 rounded-md z-10 font-alexandria font-medium"
+            style="background-color: #D1A557;"
+            style="font-family: Alexandria; font-weight: 300"
+          >
+            @if (selectedProduct()) {
+              {{ calculateDiscountPercentage(selectedProduct()!.priceBefore, selectedProduct()!.priceAfter) }}%
+            }
+            {{ isArabic ? 'خصم' : 'Off' }}
+          </div>
+          <button
+            class="absolute top-12 left-4 text-gray-600 hover:text-[#D1A557] bg-gray-100 w-7 h-7 rounded-full flex items-center justify-center z-10 p-1.5"
+            (click)="addToWishlist(selectedProduct()!.skuId || selectedProduct()!.id)"
+          >
+            <i class="fa-solid fa-heart h-4 w-4"></i>
+          </button>
+        }
+
+        @if (getAvailableStock(selectedProduct()!) <= 0) {
+          <div
+            class="absolute top-4 left-2 bg-gray-600 text-white text-xs font-semibold px-2 py-1 rounded-md z-10"
+            style="font-family: Alexandria; font-weight: 500"
+          >
+            {{ isArabic ? 'غير متوفر' : 'Out of Stock' }}
+          </div>
+        }
+
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 overflow-y-hidden">
+          <div class="w-full sm:w-1/2 flex justify-center relative overflow-y-hidden">
+            <img
+              [src]="getProductImage(selectedProduct()!)"
+              [alt]="getProductName(selectedProduct()!)"
+              class="w-32 h-32 sm:w-40 sm:h-40 object-contain rounded-lg"
+              loading="lazy"
+            />
+          </div>
+          <div class="w-full sm:w-1/2" [class.text-right]="isArabic" [class.text-left]="!isArabic">
+            <h3
+              class="text-base sm:text-lg font-semibold mb-1 sm:mb-2 mt-2"
+              [class.text-right]="isArabic"
+              [class.text-left]="!isArabic"
+            >
+              {{ getProductName(selectedProduct()!) }}
+            </h3>
+
+            <p
+              class="flex items-center text-gray-600 mb-0.5 sm:mb-1 text-[15px] font-medium"
+              [class.justify-start]="true"
+              [class.text-right]="isArabic"
+              [class.text-left]="!isArabic"
+              [attr.dir]="isArabic ? 'rtl' : 'ltr'"
+            >
+              @if (selectedProduct()) {
+                <span [class.mr-1]="isArabic" [class.ml-1]="!isArabic" class="text-gray-500 text-[15px]">
+                  {{ formatPrice(getProductPrice(selectedProduct())) }}
+                </span>
+                @if (shouldShowPriceBefore(selectedProduct())) {
+                  <span [class.mr-1]="isArabic" [class.ml-1]="!isArabic" class="line-through text-[11px]" style="color: #637089;">
+                    {{ formatPrice(selectedProduct()!.priceBefore) }}
+                  </span>
+                }
+              }
+            </p>
+            <p
+              [attr.dir]="isArabic ? 'rtl' : 'ltr'"
+              class="text-xs sm:text-sm text-gray-500 mb-4 line-clamp-3 font-alexandria font-light"
+              [class.text-right]="isArabic"
+              [class.text-left]="!isArabic"
+              style="min-height: 31px"
+            >
+              {{ getProductDescription(selectedProduct()!) }}
+            </p>
+
+            <!-- Tags in Quick View -->
+            @if (hasTags(selectedProduct())) {
+              <div
+                class="mb-4 flex flex-wrap gap-1"
+                [class.justify-end]="isArabic"
+                [class.justify-start]="!isArabic"
+              >
+                @for (tagObj of selectedProduct()!.tags!; track tagObj.tag.id) {
+                  <span
+                    class="bg-indigo-100 text-indigo-800 text-xs px-2 py-0.5 rounded font-['Alexandria'] font-light"
+                  >
+                    {{ isArabic ? tagObj.tag.nameAr : tagObj.tag.nameEn }}
+                  </span>
+                }
+              </div>
+            }
+
+            <div
+              class="flex flex-col sm:flex-row items-center gap-2"
+              [class.justify-end]="isArabic"
+              [class.justify-start]="!isArabic"
+            >
+              <button
+                class="px-3 py-1 rounded-md text-[14px] font-light w-full sm:w-auto cursor-pointer"
+                [class.bg-gray-400]="
+                  getAvailableStock(selectedProduct()!) <= 0 ||
+                  loadingCartItems().has(selectedProduct()!.skuId || selectedProduct()!.id)
+                "
+                [class.cursor-not-allowed]="
+                  getAvailableStock(selectedProduct()!) <= 0 ||
+                  loadingCartItems().has(selectedProduct()!.skuId || selectedProduct()!.id)
+                "
+                [style.background-color]="
+                  getAvailableStock(selectedProduct()!) > 0 &&
+                  !loadingCartItems().has(selectedProduct()!.skuId || selectedProduct()!.id)
+                  ? '#D1A557' : ''
+                "
+                [attr.onmouseover]="
+                  getAvailableStock(selectedProduct()!) > 0 &&
+                  !loadingCartItems().has(selectedProduct()!.skuId || selectedProduct()!.id)
+                  ? 'this.style.backgroundColor=\'#B89A4A\'' : null
+                "
+                [attr.onmouseout]="
+                  getAvailableStock(selectedProduct()!) > 0 &&
+                  !loadingCartItems().has(selectedProduct()!.skuId || selectedProduct()!.id)
+                  ? 'this.style.backgroundColor=\'#D1A557\'' : null
+                "
+                [class.text-white]="true"
+                (click)="
+                  getAvailableStock(selectedProduct()!) > 0 &&
+                  !loadingCartItems().has(selectedProduct()!.skuId || selectedProduct()!.id) &&
+                  addToCartLocal(selectedProduct()!.skuId || selectedProduct()!.id)
+                "
+                [disabled]="
+                  getAvailableStock(selectedProduct()!) <= 0 ||
+                  loadingCartItems().has(selectedProduct()!.skuId || selectedProduct()!.id)
+                "
+              >
+                @if (getAvailableStock(selectedProduct()!) <= 0) {
+                  {{ isArabic ? 'غير متوفر' : 'Out of stock' }}
+                } @else if (loadingCartItems().has(selectedProduct()!.skuId || selectedProduct()!.id)) {
+                  <div class="animate-spin rounded-full h-3 w-3 border-t-2 border-b-2 border-white inline-block"></div>
+                  {{ isArabic ? 'جاري الإضافة...' : 'Adding...' }}
+                } @else {
+                  {{ isArabic ? 'أضف إلى السلة' : 'Add to Cart' }}
+                }
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+

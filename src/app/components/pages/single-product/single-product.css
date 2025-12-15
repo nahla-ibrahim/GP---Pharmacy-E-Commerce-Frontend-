@@ -1,0 +1,38 @@
+.product-details-page {
+  min-height: 100vh;
+}
+
+.back-btn {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.back-btn:hover {
+  transform: translateX(-5px);
+}
+
+.price-shadow {
+  text-shadow: 0 2px 4px var(--shadow-sm);
+}
+
+/* Smooth animations for product image */
+.product-image-container {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-image-container:hover {
+  transform: scale(1.02);
+}
+
+/* Enhanced quantity input styling */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+  height: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .product-details-page {
+    padding-top: 1rem;
+  }
+}

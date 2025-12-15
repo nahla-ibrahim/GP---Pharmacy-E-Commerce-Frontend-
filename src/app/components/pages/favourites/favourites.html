@@ -1,0 +1,55 @@
+<section class="py-12 bg-gray-50 min-h-screen">
+  <div class="container mx-auto px-4">
+   <button class="hover:text-black text-gray-700 flex gap-1 items-center mb-3 cursor-pointer" (click)="goBack()"><i
+        class="fa-solid fa-angles-left"></i>
+      <p>Back </p>
+    </button>
+    <div class="text-center mb-8">
+      <h1 class="text-3xl lg:text-4xl font-bold text-gray-800 mb-4">My Favourites</h1>
+      <p class="text-gray-600">Your saved healthcare products</p>
+    </div>
+
+    <div class="max-w-6xl mx-auto">
+
+      @if (fullFavList().length === 0) {
+        <div class="bg-white rounded-2xl p-12 text-center shadow-lg">
+          <i class="fas fa-heart text-6xl text-gray-300 mb-6"></i>
+          <h3 class="text-2xl font-bold text-gray-800 mb-4">Your favourites are empty</h3>
+          <p class="text-gray-600 mb-8">Save your favorite products to find them easily later</p>
+          <button [routerLink]="['/home']" class="bg-[#a5b2d2] hover:bg-[#8a9bd6] text-white px-8 py-3 rounded-lg font-semibold transition-colors">
+            Explore Products
+          </button>
+        </div>
+      }
+
+      @if (fullFavList().length > 0) {
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+
+          @for (product of fullFavList(); track product.id) {
+            <app-product-card [productdata]="product"></app-product-card>
+          }
+
+        </div>
+      }
+
+     @if (fullFavList().length > 0) {
+  <div class="mt-8 text-center">
+    <p class="text-gray-600">
+      You have 
+      <span class="font-semibold text-[#a5b2d2]">{{ fullFavList().length }}</span> 
+      {{ fullFavList().length === 1 ? 'item' : 'items' }} in your favourites
+    </p>
+
+    <button 
+      (click)="clearFav()"
+      class="mt-4 text-red-500 hover:text-red-700 font-semibold transition-colors">
+      Clear All Favourites
+    </button>
+  </div>
+}
+
+
+    </div>
+
+  </div>
+</section>

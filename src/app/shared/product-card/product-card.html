@@ -1,0 +1,70 @@
+  <div class="product-card-container justify-between flex flex-col h-full border-2 border-[var(--border-color)] rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden bg-[var(--bg-card)] group transition-all duration-300" style="transition-timing-function: var(--ease-smooth); box-shadow: 0 4px 15px var(--shadow-md);">
+    <div class="product-image-wrapper rounded-t-lg shadow-[0_2px_5px_var(--shadow-sm)] bg-gradient-to-br from-[var(--secondary)] to-[var(--background)] hover:from-[var(--accent)] hover:to-[var(--highlight)] relative overflow-hidden transition-all duration-300" style="transition-timing-function: var(--ease-smooth);">
+
+      <img 
+        class="product-image max-w-full max-h-full cursor-pointer"
+        [src]="productdata().imageUrl || 'assets/images/placeholder.jpg'"
+        [alt]="productdata().name"
+        (click)="goToSingleProductPage(productdata().id)"
+        (error)="$event.target.src='assets/images/placeholder.jpg'" />
+      
+      <!-- Discount Badge (Top Left) -->
+      @if(perdiscout() > 0 ){
+      <span
+        class="absolute left-4 top-4 inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-[var(--accent)] text-white shadow-lg border-2 border-white animate-pulse z-10">{{perdiscout()}}%
+        OFF
+      </span>
+      }
+
+      <!-- Wishlist Button (Top Right) -->
+      <button 
+        (click)="addToFav(productdata()!.id)" 
+        type="button"
+        class="absolute right-4 top-4 z-10">
+        <i class="fa-heart card-button" [ngClass]="isFav() ? 'fa-solid' : 'fa-regular'"></i>
+      </button>
+
+    </div>
+    <div class="flex justify-between items-center mt-3 mx-3">
+      <button class="text-lg font-bold text-left text-[var(--text-primary)] hover:text-[var(--accent)] transition-all duration-300 line-clamp-1" (click)="goToSingleProductPage(productdata().id)" style="transition-timing-function: var(--ease-smooth);">
+        {{productdata().name}}
+      </button>
+    </div>
+
+    @if (productdata().stock.length == 0 ) {
+    <div class="hidden"></div>
+    }
+    @else{
+    @if (productdata().stock[0].quantity == 0 ) {<div class="text-left text-sm text-red-600 font-semibold mx-3 bg-red-50 px-2 py-1 rounded">
+      <i class="fas fa-exclamation-circle mr-1"></i>Out of stock
+    </div>}
+    @if(productdata().stock[0].quantity < 10){ <div class="text-left text-sm text-orange-600 font-semibold mx-3 bg-orange-50 px-2 py-1 rounded">Only
+      {{productdata().stock[0].quantity}} item in stock
+  </div>}
+
+  }
+
+  <!-- Price Section (Above) -->
+  <div class="my-4 mx-3">
+    <div class="text-start">
+      @if(productdata().discountPrice){
+      <span class="line-through text-[var(--neutral)] text-sm">{{productdata().price | currency:'EGP':'symbol'}} </span>
+      }
+      <p class="text-lg md:text-xl font-bold text-[var(--text-primary)]">
+        {{(productdata().discountPrice ?? productdata().price) | currency:'EGP':'symbol' }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Add to Cart Button (Below) -->
+  <div class="flex justify-center items-center mb-4 mx-3">
+    <button (click)="addTocart(productdata()!.id )" type="button" class="flex justify-center">
+      <i class="fa-solid fa-cart-arrow-down card-button"></i>
+    </button>
+  </div>
+  <div class="flex justify-between w-full bg-gradient-to-r from-[var(--secondary)] to-transparent h-1 rounded-b-2xl">
+
+  </div>
+
+
+  </div>

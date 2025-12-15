@@ -1,0 +1,122 @@
+/* Mobile: Apply same styling as middle banners with reduced height */
+@media (max-width: 767px) {
+  .main-banner-slider {
+    padding: 0;
+    height: auto;
+    min-height: 200px;
+    max-height: 40vh;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    overflow: hidden;
+  }
+  
+  .main-banner-container {
+    height: auto;
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .main-banner-slide {
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: none;
+    height: auto;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  
+  .main-banner-slide .banner-link {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+    overflow: hidden;
+  }
+  
+  .main-banner-slide .banner-image-wrapper {
+    border-radius: 0;
+    overflow: hidden;
+    height: auto;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .main-banner-slide .banner-image {
+    border-radius: 0;
+    width: 100%;
+    height: auto;
+    max-height: 40vh;
+    object-fit: contain;
+  }
+  
+  /* Hover effects for mobile (on touch devices) */
+  .main-banner-slide .banner-link:active .banner-image {
+    transform: scale(1.02);
+  }
+}
+
+/* Desktop: Keep original height */
+@media (min-width: 768px) {
+  .main-banner-slider {
+    height: 85vh;
+  }
+  
+  .main-banner-container {
+    height: 100%;
+  }
+  
+  .main-banner-slide {
+    height: 100%;
+  }
+  
+  .main-banner-slide .banner-link {
+    height: 100%;
+  }
+  
+  .main-banner-slide .banner-image-wrapper {
+    height: 100%;
+  }
+  
+  .main-banner-slide .banner-image {
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/* Banner hover effects (same as middle banners) */
+.banner-link {
+  transition: all 0.3s ease;
+}
+
+.banner-link:hover {
+  transform: translateY(-2px);
+}
+
+.banner-image-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.banner-image {
+  transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+.banner-link:hover .banner-image {
+  transform: scale(1.05);
+  filter: brightness(1.05);
+}
+
+.banner-overlay {
+  transition: background-color 0.5s ease;
+  pointer-events: none;
+}
+
+.banner-link:hover .banner-overlay {
+  background-color: rgba(0, 0, 0, 0.1);
+}

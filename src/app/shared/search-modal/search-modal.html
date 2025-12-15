@@ -1,0 +1,112 @@
+@if (isOpen()) {
+  <div class="search-modal-overlay" (click)="closeModal()">
+    <div class="search-modal-container" (click)="$event.stopPropagation()">
+      <!-- Header -->
+      <div class="search-modal-header">
+        <h2 class="text-xl md:text-2xl font-bold text-[var(--text-primary)]">Search Products</h2>
+        <button 
+          (click)="closeModal()" 
+          class="close-btn"
+          aria-label="Close search">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <!-- Search Input -->
+      <div class="search-input-container">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          [value]="searchTerm()"
+          (input)="onSearchInput($event)"
+          (keyup.enter)="onSearchSubmit()"
+          placeholder="Search for products..."
+          class="search-input"
+          autocomplete="off"
+        />
+        @if (searchTerm().length > 0) {
+          <button 
+            (click)="searchTerm.set(''); searchResults.set([]); hasSearched.set(false);" 
+            class="clear-search-btn"
+            aria-label="Clear search">
+            <i class="fas fa-times"></i>
+          </button>
+        }
+      </div>
+
+      <!-- Loading State -->
+      @if (isLoading()) {
+        <div class="search-loading">
+          <i class="fas fa-spinner fa-spin text-[var(--accent)] text-2xl"></i>
+          <p class="text-[var(--text-secondary)] mt-2">Searching...</p>
+        </div>
+      }
+
+      <!-- Search Results -->
+      @if (!isLoading() && hasSearched() && searchResults().length > 0) {
+        <div class="search-results">
+          <div class="results-header">
+            <p class="text-[var(--text-secondary)]">
+              Found {{ searchResults().length }} result(s)
+            </p>
+            <button 
+              (click)="viewAllResults()" 
+              class="view-all-btn">
+              View All <i class="fas fa-arrow-right ml-1"></i>
+            </button>
+          </div>
+          
+          <div class="results-list">
+            @for (product of searchResults(); track product.id) {
+              <div 
+                class="result-item"
+                (click)="viewProduct(product.id)">
+                <div class="result-image">
+                  <img 
+                    [src]="product.imageUrl || '/assets/placeholder.png'" 
+                    [alt]="product.name"
+                    class="product-image"
+                  />
+                </div>
+                <div class="result-info">
+                  <h3 class="result-name">{{ product.name }}</h3>
+                  <p class="result-description">{{ product.description || 'No description available' }}</p>
+                  <div class="result-price">
+                    @if (product.discountPrice) {
+                      <span class="price-discounted">{{ product.discountPrice | currency:'EGP':'symbol' }}</span>
+                      <span class="price-original">{{ product.price | currency:'EGP':'symbol' }}</span>
+                    } @else {
+                      <span class="price-current">{{ product.price | currency:'EGP':'symbol' }}</span>
+                    }
+                  </div>
+                </div>
+                <div class="result-arrow">
+                  <i class="fas fa-chevron-right"></i>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- No Results -->
+      @if (!isLoading() && hasSearched() && searchResults().length === 0 && searchTerm().length >= 2) {
+        <div class="no-results">
+          <i class="fas fa-search text-[var(--text-muted)] text-4xl mb-4"></i>
+          <p class="text-[var(--text-secondary)] text-lg">No products found</p>
+          <p class="text-[var(--text-muted)] text-sm mt-2">Try searching with different keywords</p>
+        </div>
+      }
+
+      <!-- Initial State -->
+      @if (!hasSearched() && searchTerm().length < 2) {
+        <div class="search-hint">
+          <i class="fas fa-lightbulb text-[var(--accent)] text-3xl mb-4"></i>
+          <p class="text-[var(--text-secondary)]">Start typing to search for products</p>
+          <p class="text-[var(--text-muted)] text-sm mt-2">Enter at least 2 characters</p>
+        </div>
+      }
+    </div>
+  </div>
+}
+

@@ -1,0 +1,148 @@
+/* You can add global styles to this file, and also import other style files */
+/* Importing a Google Font */
+@import 'tailwindcss';
+
+@theme {
+  /* Color Palette Variables */
+  --color-primary: #0F152B;
+  --color-secondary: #BCC7E5;
+  --color-accent: #D1A557;
+  --color-highlight: #F3D986;
+  --color-neutral: #637089;
+  --color-background: #BCC7E5;
+  --color-white: #FFFFFF;
+  
+  /* Legacy support */
+  --color-rock-blue: #BCC7E5;
+  --color-light-blue: #BCC7E5;
+}
+
+/* Global CSS Variables for Light Mode */
+:root {
+  --primary: #0F152B;
+  --secondary: #BCC7E5;
+  --accent: #D1A557;
+  --highlight: #F3D986;
+  --neutral: #637089;
+  --background: #BCC7E5;
+  --white: #FFFFFF;
+  
+  /* Background colors */
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F8F9FA;
+  --bg-card: #FFFFFF;
+  --bg-overlay: rgba(255, 255, 255, 0.95);
+  
+  /* Text colors */
+  --text-primary: #0F152B;
+  --text-secondary: #637089;
+  --text-muted: #9CA3AF;
+  
+  /* Border colors */
+  --border-color: #E5E7EB;
+  --border-hover: #BCC7E5;
+  
+  /* Shadow colors */
+  --shadow-sm: rgba(15, 21, 43, 0.05);
+  --shadow-md: rgba(15, 21, 43, 0.1);
+  --shadow-lg: rgba(15, 21, 43, 0.15);
+  --shadow-xl: rgba(15, 21, 43, 0.2);
+}
+
+/* Global CSS Variables for Dark Mode */
+.dark {
+  --primary: #F3D986;
+  --secondary: #4A5568;
+  --accent: #D1A557;
+  --highlight: #F3D986;
+  --neutral: #A0AEC0;
+  --background: #1A202C;
+  --white: #FFFFFF;
+  
+  /* Background colors */
+  --bg-primary: #1A202C;
+  --bg-secondary: #2D3748;
+  --bg-card: #2D3748;
+  --bg-overlay: rgba(26, 32, 44, 0.95);
+  
+  /* Text colors */
+  --text-primary: #F7FAFC;
+  --text-secondary: #CBD5E0;
+  --text-muted: #718096;
+  
+  /* Border colors */
+  --border-color: #4A5568;
+  --border-hover: #718096;
+  
+  /* Shadow colors */
+  --shadow-sm: rgba(0, 0, 0, 0.3);
+  --shadow-md: rgba(0, 0, 0, 0.4);
+  --shadow-lg: rgba(0, 0, 0, 0.5);
+  --shadow-xl: rgba(0, 0, 0, 0.6);
+}
+
+/* Smooth cubic-bezier animations */
+:root {
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-elastic: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+  --ease-slow: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-fast: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+/* Global smooth transitions with cubic-bezier */
+* {
+  transition: 
+    color 0.3s var(--ease-smooth),
+    background-color 0.3s var(--ease-smooth),
+    border-color 0.3s var(--ease-smooth),
+    transform 0.3s var(--ease-smooth),
+    opacity 0.3s var(--ease-smooth),
+    box-shadow 0.3s var(--ease-smooth);
+}
+
+/* Smooth page transitions */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.4s var(--ease-smooth), color 0.4s var(--ease-smooth);
+}
+
+/* Improved scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  transition: background-color 0.3s var(--ease-smooth);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--neutral);
+  border-radius: 5px;
+  transition: background-color 0.3s var(--ease-smooth);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Smooth focus transitions */
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  transition: outline 0.2s var(--ease-smooth);
+}
+
+/* Modern selection styling */
+::selection {
+  background-color: var(--accent);
+  color: var(--white);
+}
+
+::-moz-selection {
+  background-color: var(--accent);
+  color: var(--white);
+}

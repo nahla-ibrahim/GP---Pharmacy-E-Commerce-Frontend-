@@ -1,0 +1,96 @@
+/* Category Details Component Styles */
+/* Most styles are handled by Tailwind classes in the template */
+
+/* Ensure smooth transitions */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Custom scrollbar for dropdowns */
+.max-h-80::-webkit-scrollbar {
+  width: 6px;
+}
+
+.max-h-80::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.max-h-80::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.max-h-80::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Ensure z-index layering works correctly */
+.z-\[47\] {
+  z-index: 47;
+}
+
+.z-\[60\] {
+  z-index: 60;
+}
+
+.z-\[70\] {
+  z-index: 70;
+}
+
+.z-\[95\] {
+  z-index: 95;
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Pagination button styles using palette colors */
+.pagination-btn {
+  transition: background-color 0.3s ease;
+}
+
+.pagination-btn-active {
+  background-color: #D1A557 !important;
+}
+
+.pagination-btn-active:hover:not(:disabled) {
+  background-color: #B89A4A !important;
+}
+
+.pagination-btn-disabled {
+  background-color: #d1d5db !important;
+}
+
+.pagination-page-btn {
+  transition: background-color 0.3s ease;
+}
+
+.pagination-page-btn-active {
+  background-color: #D1A557 !important;
+}
+
+.pagination-page-btn-active:hover {
+  background-color: #B89A4A !important;
+}
+

@@ -1,0 +1,172 @@
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Smooth scrolling for carousels */
+[id^="carousel-"] {
+  scroll-behavior: smooth;
+}
+
+/* Fix product card sizing - smaller on mobile */
+[id^="carousel-"] > div {
+  flex-shrink: 0;
+  width: 180px;
+  max-width: 180px;
+  min-width: 180px;
+}
+
+@media (min-width: 768px) {
+  [id^="carousel-"] > div {
+    width: 260px;
+    max-width: 260px;
+    min-width: 260px;
+  }
+}
+
+/* Carousel wrapper - different behavior for mobile vs desktop */
+.carousel-wrapper {
+  position: relative;
+}
+
+/* Mobile: Allow touch scrolling */
+@media (max-width: 767px) {
+  .carousel-wrapper {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Hide scrollbar on Firefox */
+    -ms-overflow-style: none; /* Hide scrollbar on IE/Edge */
+    touch-action: pan-x pan-y pinch-zoom; /* Allow horizontal panning on mobile */
+    width: 100%;
+    position: relative;
+  }
+  
+  .carousel-wrapper::-webkit-scrollbar {
+    display: none; /* Hide scrollbar on Chrome/Safari */
+  }
+  
+  .carousel-content {
+    display: flex;
+    scroll-behavior: smooth;
+    width: max-content; /* Allow content to be wider than container */
+    min-width: 100%;
+    /* Remove transform on mobile - use native scroll */
+    transform: none !important;
+    transition: none !important;
+  }
+  
+  .carousel-content > div {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+  
+  /* Ensure product cards don't interfere with scrolling */
+  .carousel-content app-product-card {
+    pointer-events: auto;
+    touch-action: manipulation; /* Improve touch responsiveness */
+  }
+}
+
+/* Desktop: Hide overflow, use transform with arrows */
+@media (min-width: 768px) {
+  .carousel-wrapper {
+    overflow: hidden;
+  }
+  
+  [id^="carousel-"] {
+    display: flex;
+    will-change: transform;
+    touch-action: pan-y; /* Prevent horizontal touch on desktop */
+  }
+}
+
+/* Banner carousel - full width */
+[id^="banner-carousel-"] {
+  scroll-behavior: smooth;
+}
+
+[id^="banner-carousel-"] > div {
+  flex-shrink: 0;
+  width: 100%;
+  min-width: 100%;
+}
+
+/* Banner hover effects and sizing */
+.banner-link {
+  transition: all 0.3s ease;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 768px) {
+  .banner-link {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .banner-link {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+}
+
+/* Banner image - show full height without cropping */
+.banner-image-wrapper .banner-image {
+  height: auto;
+  width: 100%;
+  object-fit: contain;
+}
+
+.banner-link:hover {
+  transform: translateY(-4px);
+}
+
+.banner-image-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.banner-image {
+  transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+.banner-link:hover .banner-image {
+  transform: scale(1.05);
+  filter: brightness(1.05);
+}
+
+.banner-overlay {
+  transition: background-color 0.5s ease;
+  pointer-events: none;
+}
+
+/* Custom scrollbar for better UX on desktop */
+@media (min-width: 768px) {
+  .scrollbar-hide:hover {
+    scrollbar-width: thin;
+  }
+  
+  .scrollbar-hide:hover::-webkit-scrollbar {
+    display: block;
+    height: 6px;
+  }
+  
+  .scrollbar-hide:hover::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  .scrollbar-hide:hover::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 10px;
+  }
+}
+

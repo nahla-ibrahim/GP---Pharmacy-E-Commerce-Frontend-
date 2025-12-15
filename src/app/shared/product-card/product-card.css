@@ -1,0 +1,121 @@
+/* Product card hover effects - similar to main slider */
+.product-card-container {
+  transition: all 0.3s ease;
+}
+
+.product-card-container:hover {
+  transform: translateY(-2px);
+}
+
+.product-image-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.product-image {
+  transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+.product-card-container:hover .product-image {
+  transform: scale(1.05);
+  filter: brightness(1.05);
+}
+
+.card-button {
+  display: flex;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid var(--secondary);
+  background-color: var(--secondary);
+  width: 38px;
+  height: 38px;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  color: var(--text-primary);
+}
+
+.card-button:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  transform: scale(1.15) rotate(10deg);
+  box-shadow: 0 6px 20px rgba(209, 165, 87, 0.5);
+}
+
+/* Line clamp for product name */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
+
+/* Make product cards smaller on mobile */
+@media (max-width: 767px) {
+  .product-card-container {
+    font-size: 0.875rem;
+  }
+  
+  /* Reduce card button size */
+  .product-card-container .card-button {
+    width: 32px;
+    height: 32px;
+    font-size: 0.75rem;
+  }
+  
+  /* Reduce product name font size */
+  .product-card-container .line-clamp-1 {
+    font-size: 0.875rem;
+    line-height: 1.2;
+  }
+  
+  /* Reduce price font size */
+  .product-card-container .text-lg {
+    font-size: 0.875rem;
+  }
+  
+  .product-card-container .text-xl {
+    font-size: 1rem;
+  }
+  
+  /* Reduce padding and margins */
+  .product-card-container .mx-3 {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+  
+  .product-card-container .mt-3 {
+    margin-top: 0.5rem;
+  }
+  
+  .product-card-container .my-4 {
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .product-card-container .mb-4 {
+    margin-bottom: 0.75rem;
+  }
+  
+  /* Reduce badge sizes */
+  .product-card-container .absolute.left-4.top-4 {
+    left: 0.5rem;
+    top: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.625rem;
+  }
+  
+  .product-card-container .absolute.right-4.top-4 {
+    right: 0.5rem;
+    top: 0.5rem;
+  }
+  
+  /* Reduce text sizes in stock messages */
+  .product-card-container .text-sm {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+}

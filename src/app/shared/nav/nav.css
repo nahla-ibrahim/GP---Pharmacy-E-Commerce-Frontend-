@@ -1,0 +1,53 @@
+@media screen and (max-width: 1024px) {
+  .side-menu {
+    position: fixed;
+    top: 0;
+    background: var(--bg-overlay);
+    backdrop-filter: blur(20px);
+    opacity: 0.98;
+    height: 100vh;
+    left: -100%;
+    transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 20px;
+    z-index: 100;
+    min-width: 60vw;
+    max-width: 100%;
+    box-shadow: 4px 0 20px var(--shadow-xl);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+  }
+  .side-menu.open {
+    left: 0%;
+  }
+  ul {
+    max-height: 80vh;
+    overflow: scroll;
+  }
+  .close-menu-btn {
+    align-self: flex-end;
+    margin-left: auto;
+    margin-bottom: 1rem;
+  }
+  .close-menu-btn:hover {
+    color: var(--accent);
+    transform: scale(1.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Ensure bottom buttons are in a row */
+  .side-menu > div:last-child {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: 0.25rem;
+    width: 100%;
+  }
+  
+  .side-menu > div:last-child > * {
+    flex: 0 0 auto;
+    min-width: fit-content;
+  }
+}

@@ -1,0 +1,139 @@
+<div class="min-h-screen bg-gray-50 p-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="mb-6 flex items-center justify-between">
+      <h1 class="text-3xl font-bold text-gray-800">Orders Management</h1>
+      <button
+        (click)="loadOrders()"
+        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+      >
+        <i class="fas fa-sync-alt mr-2"></i>Refresh
+      </button>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Search</label>
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            (input)="onSearchChange()"
+            placeholder="Search by order number, customer, address..."
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Status Filter</label>
+          <select
+            [(ngModel)]="statusFilter"
+            (change)="onStatusFilterChange()"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="all">All Statuses</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="processing">Processing</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    @if (errorMessage) {
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+        {{ errorMessage }}
+      </div>
+    }
+
+    <!-- Loading State -->
+    @if (isLoading) {
+      <div class="text-center py-12">
+        <i class="fas fa-spinner fa-spin text-4xl text-gray-400"></i>
+        <p class="mt-4 text-gray-600">Loading orders...</p>
+      </div>
+    }
+
+    <!-- Orders Table -->
+    @if (!isLoading && filteredOrders.length > 0) {
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order #</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Branch</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              @for (order of filteredOrders; track order.id) {
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-medium text-gray-900">{{ order.orderNumber }}</div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900">{{ order.userName || 'N/A' }}</div>
+                    <div class="text-xs text-gray-500">{{ order.userId }}</div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900">{{ order.createdAt | date:'short' }}</div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span [class]="'px-2 py-1 text-xs font-semibold rounded-full ' + getStatusColor(order.status)">
+                      {{ order.status }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900">{{ order.paymentStatus }}</div>
+                    <div class="text-xs text-gray-500">{{ order.paymentMethod }}</div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-semibold text-gray-900">{{ formatPrice(order.totalAmount) }}</div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900">{{ order.branchName }}</div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    @if (order.status.toLowerCase() !== 'cancelled' && order.status.toLowerCase() !== 'delivered') {
+                      <button
+                        (click)="cancelOrder(order.id)"
+                        class="text-red-600 hover:text-red-900 mr-3"
+                      >
+                        <i class="fas fa-times-circle mr-1"></i>Cancel
+                      </button>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+
+    <!-- Empty State -->
+    @if (!isLoading && filteredOrders.length === 0) {
+      <div class="bg-white rounded-lg shadow-md p-12 text-center">
+        <i class="fas fa-clipboard-list text-6xl text-gray-300 mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">No orders found</h3>
+        <p class="text-gray-600">
+          @if (searchTerm || statusFilter !== 'all') {
+            Try adjusting your search or filter criteria.
+          } @else {
+            There are no orders in the system yet.
+          }
+        </p>
+      </div>
+    }
+  </div>
+</div>
+

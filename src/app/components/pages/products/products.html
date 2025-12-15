@@ -1,0 +1,179 @@
+<div class="products-page">
+  <div class="container">
+    <h1 class="page-title">Products</h1>
+
+    <!-- Filters Section -->
+    <div class="filters-section">
+      <!-- Search -->
+      <div class="filter-group search-group">
+        <div class="search-container">
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            (keyup.enter)="onSearch()"
+            placeholder="Search products..."
+            class="search-input"
+            />
+          <button (click)="onSearch()" class="search-btn">Search</button>
+        </div>
+      </div>
+
+        <!-- Category Filter -->
+        <div class="filter-group">
+          <label>Category:</label>
+          <select
+            [ngModel]="selectedCategoryId()"
+            (ngModelChange)="onCategoryChange($event)"
+            class="filter-select"
+            >
+            <option [value]="undefined">All Categories</option>
+            @for (category of categories(); track category) {
+              <option [value]="category.id">
+                {{ category.name }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <!-- Branch Filter -->
+        <div class="filter-group">
+          <label>Branch:</label>
+          <select
+            [ngModel]="selectedBranchId()"
+            (ngModelChange)="onBranchChange($event)"
+            class="filter-select"
+            >
+            <option [value]="undefined">All Branches</option>
+            @for (branch of branches(); track branch) {
+              <option [value]="branch.id">
+                {{ branch.name }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <!-- Sort -->
+        <div class="filter-group">
+          <label>Sort By:</label>
+          <select
+            [ngModel]="sortBy()"
+            (ngModelChange)="onSortChange($event)"
+            class="filter-select"
+            >
+            @for (option of sortOptions; track option) {
+              <option [value]="option.value">
+                {{ option.label }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <!-- Price Range -->
+        <div class="filter-group price-filter">
+          <label>Price Range:</label>
+          <div class="price-inputs">
+            <input
+              type="number"
+              [(ngModel)]="minPrice"
+              (input)="onPriceInput()"
+              (change)="onPriceFilterChange()"
+              placeholder="Min"
+              [class.price-input-error]="hasPriceValidationError()"
+              class="price-input"
+              />
+              <span>-</span>
+              <input
+                type="number"
+                [(ngModel)]="maxPrice"
+                (input)="onPriceInput()"
+                (change)="onPriceFilterChange()"
+                placeholder="Max"
+                [class.price-input-error]="hasPriceValidationError()"
+                class="price-input"
+                />
+              </div>
+            </div>
+
+            <!-- Stock Filter -->
+            <div class="filter-group">
+              <label>
+                <input
+                  type="checkbox"
+                  [(ngModel)]="inStockOnly"
+                  (change)="onStockFilterChange()"
+                  />
+                  In Stock Only
+                </label>
+              </div>
+
+              <!-- Clear Filters -->
+              <button (click)="clearFilters()" class="clear-btn">Clear Filters</button>
+            </div>
+
+            <!-- Results Info -->
+            @if (pagination()) {
+              <div class="results-info">
+                <p>
+                  Showing {{ products().length }} of {{ totalCount }} products
+                  (Page {{ currentPage() }} of {{ totalPages }})
+                </p>
+              </div>
+            }
+
+            <!-- Loading -->
+            @if (isLoading()) {
+              <div class="loading">
+                <p>Loading products...</p>
+              </div>
+            }
+
+            <!-- Products Grid -->
+            @if (!isLoading()) {
+              <div class="products-grid">
+                @for (product of products(); track product) {
+                  <app-product-card
+                    [productdata]="product"
+                    />
+                }
+              </div>
+            }
+
+            <!-- No Products -->
+            @if (!isLoading() && products().length === 0) {
+              <div class="no-products">
+                <p>No products found. Try adjusting your filters.</p>
+              </div>
+            }
+
+            <!-- Pagination -->
+            @if (pagination() && totalPages > 1) {
+              <div class="pagination">
+                <button
+                  (click)="previousPage()"
+                  [disabled]="!hasPrevious"
+                  class="page-btn"
+                  >
+                  <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <div class="page-numbers">
+                  @for (page of getPaginationPages(); track $index) {
+                    @if (page === '...') {
+                      <span class="page-ellipsis">...</span>
+                    } @else {
+                    <button
+                        (click)="goToPage(typeof page === 'number' ? page : 1)"
+                        [class.active]="currentPage() === page"
+                      class="page-number"
+                      >
+                        {{ page }}
+                    </button>
+                    }
+                  }
+                </div>
+                <button (click)="nextPage()" [disabled]="!hasNext" class="page-btn">
+                  Next <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+            }
+          </div>
+        </div>

@@ -1,0 +1,42 @@
+@if (banners().length > 0) {
+<div class="relative main-banner-slider" (mouseenter)="stopAutoplay()" (mouseleave)="startAutoplay()">
+  <div class="flex transition-transform duration-500 ease-in-out main-banner-container"
+    [style.transform]="'translateX(-' + (currentSlide() * 100) + '%)'">
+    @for (banner of banners(); track $index) {
+    <div class="relative w-full flex-none main-banner-slide">
+      <a 
+        [href]="banner.link || '#'" 
+        [target]="banner.link?.startsWith('http') ? '_blank' : '_self'"
+        class="banner-link block w-full overflow-hidden group">
+        <div class="banner-image-wrapper relative overflow-hidden w-full">
+          <img 
+            [src]="getBannerImageUrl(banner.imageUrl)" 
+            [alt]="banner.title || 'Banner'"
+            class="banner-image w-full h-auto object-contain block bg-rock-blue transition-transform duration-500"
+            loading="eager"
+            [attr.fetchpriority]="$index === 0 ? 'high' : 'auto'"
+            (error)="handleImageError($event, banner.imageUrl)" />
+          <div class="banner-overlay absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
+        </div>
+      </a>
+    </div>
+    }
+  </div>
+
+  <!-- ////////////// next/prev buttons //////////// -->
+  <button
+    class="hidden md:block w-10 h-10 leading-5 z-2 cursor-pointer absolute text-white p-3 border-none text-lg top-1/2 transform -translate-y-1/2 bg-black/50 rounded-full left-2.5 container mx-auto px-3"
+    (click)="prevSlide()">&#10094;</button>
+  <button
+    class="hidden md:block next w-10 h-10 leading-5 z-2 cursor-pointer absolute text-white p-3 border-none text-lg top-1/2 transform -translate-y-1/2 bg-black/50 rounded-full right-2.5 container mx-auto px-3"
+    (click)="nextSlide()">&#10095;</button>
+
+  <!-- ////////// pagination ///////////// -->
+  <div class="z-2 w-full absolute bottom-4 text-center">
+    @for (banner of banners(); track $index) {
+    <span (click)="goToSlide($index)" class="inline-block w-3 h-3 mx-1 cursor-pointer rounded-full " [ngClass]="{
+        'bg-white/50': $index != currentSlide() ,'bg-white': $index === currentSlide()}"></span>
+    }
+  </div>
+</div>
+}

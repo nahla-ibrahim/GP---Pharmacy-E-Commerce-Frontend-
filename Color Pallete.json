@@ -1,0 +1,20 @@
+{
+    "theme": {
+      "colors": {
+        "primary": "#0F152B",
+        "secondary": "#BCC7E5",
+        "accent": "#D1A557",
+        "highlight": "#F3D986",
+        "neutral": "#637089",
+        "background": "#BCC7E5",
+        "white": "#FFFFFF"
+      },
+      "description": {
+        "primary": "Deep Midnight Navy - Used for the logo background, CTA buttons, and main headings.",
+        "secondary": "Soft Periwinkle - Used for the main banner background.",
+        "accent": "Metallic Gold - Used for decorative rings and bottle caps.",
+        "highlight": "Champagne Gold - Used for lighting highlights on spheres.",
+        "neutral": "Slate Blue - Used for shadows and secondary product packaging."
+      }
+    }
+  }

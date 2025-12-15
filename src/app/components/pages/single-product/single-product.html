@@ -1,0 +1,163 @@
+<div class="product-details-page bg-gradient-to-br from-[var(--bg-primary)] to-[var(--bg-secondary)] min-h-screen pb-16 transition-all duration-500" style="transition-timing-function: var(--ease-smooth);">
+  <main class="max-w-7xl mx-auto p-4 md:p-6 lg:p-10">
+    <button 
+      class="back-btn flex gap-2 items-center mb-6 cursor-pointer text-[var(--text-secondary)] hover:text-[var(--accent)] transition-all duration-300 group" 
+      (click)="goBack()"
+      style="transition-timing-function: var(--ease-smooth);">
+      <i class="fa-solid fa-angles-left transform group-hover:-translate-x-1 transition-transform duration-300"></i>
+      <p class="font-medium">Back to Products</p>
+    </button>
+
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12 items-start">
+      <!-- Product Image -->
+      <div class="space-y-4">
+        <div class="rounded-2xl overflow-hidden bg-[var(--bg-card)] p-4 md:p-6 shadow-xl border-2 border-[var(--border-color)] transition-all duration-400 hover:shadow-2xl" style="transition-timing-function: var(--ease-smooth); box-shadow: 0 10px 30px var(--shadow-md);">
+          <div class="relative bg-gradient-to-br from-[var(--secondary)] to-[var(--background)] rounded-xl shadow-lg overflow-hidden group">
+            @if(perdiscount() > 0 ) {
+            <span
+              class="absolute left-4 top-4 z-10 inline-flex items-center px-4 py-2 rounded-full text-sm font-bold bg-[var(--accent)] text-white shadow-2xl border-2 border-white animate-pulse">
+              {{perdiscount()}}% OFF
+            </span>
+            }
+
+            <img 
+              [src]="getProductImage(ProductById())" 
+              [alt]="ProductById()?.name || 'Product image'"
+              class="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-110" 
+              style="transition-timing-function: var(--ease-smooth);"
+              (error)="$event.target.src='assets/images/placeholder.png'" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Info -->
+      <div class="bg-[var(--bg-card)] rounded-2xl shadow-xl lg:p-8 flex justify-between flex-col p-6 border-2 border-[var(--border-color)] transition-all duration-400 hover:shadow-2xl" style="transition-timing-function: var(--ease-smooth); box-shadow: 0 10px 30px var(--shadow-md);">
+        <div class="top">
+          <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold leading-tight text-[var(--text-primary)] mb-4">{{ProductById()?.name}}</h1>
+          
+          <div class="mt-6 flex items-end gap-4 flex-wrap">
+            <div class="flex-1">
+              @if(showDiscount()){
+              <div class="text-3xl md:text-4xl lg:text-5xl font-bold text-[var(--accent)] mb-2" style="text-shadow: 0 2px 4px var(--shadow-sm);">
+                {{ProductById()?.discountPrice | number:'1.0-0'}} EGP
+              </div>
+              <div class="text-base text-[var(--text-muted)] line-through mb-1">{{ProductById()?.price | number:'1.0-0'}} EGP</div>
+              <div class="text-sm text-[var(--accent)] font-semibold bg-[var(--accent)]/10 px-3 py-1 rounded-lg inline-block">
+                <i class="fas fa-tag mr-1"></i>You save {{discount() | number:'1.0-0'}} EGP
+              </div>
+              }
+              @else {
+              <div class="text-3xl md:text-4xl lg:text-5xl font-bold text-[var(--text-primary)]" style="text-shadow: 0 2px 4px var(--shadow-sm);">
+                {{ProductById()?.price | number:'1.0-0'}} EGP
+              </div>
+              }
+            </div>
+
+            <div class="ml-auto">
+              <button 
+                (click)="addToFav(ProductById()!.id)"
+                class="w-12 h-12 rounded-full border-2 border-[var(--border-color)] bg-[var(--bg-primary)] flex items-center justify-center transition-all duration-400 hover:bg-[var(--accent)] hover:border-[var(--accent)] hover:scale-110"
+                style="transition-timing-function: var(--ease-bounce);"
+                [attr.aria-label]="isFav() ? 'Remove from favorites' : 'Add to favorites'">
+                <i class="fa-heart text-xl" 
+                   [ngClass]="isFav() ? 'fa-solid text-[var(--accent)]' : 'fa-regular text-[var(--text-secondary)]'"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Stock & Delivery Info -->
+        <div class="mt-6 border-2 border-[var(--border-color)] rounded-xl p-4 md:p-5 bg-[var(--bg-primary)] flex items-center gap-4 transition-all duration-300 hover:border-[var(--accent)]" style="transition-timing-function: var(--ease-smooth);">
+          <div class="flex-1">
+            <div class="font-semibold text-[var(--text-primary)] flex items-center gap-2">
+              <i class="fas fa-truck text-[var(--accent)]"></i>
+              Delivery in 10-15 mins
+            </div>
+            <div class="text-xs text-[var(--text-muted)] mt-1">Shipment of 1 item</div>
+          </div>
+
+          @if(ProductById()?.stock?.[0] && ProductById()?.stock?.[0]!.quantity >0){
+          <div class="text-sm font-bold text-[var(--accent)] bg-[var(--accent)]/10 px-4 py-2 rounded-lg border-2 border-[var(--accent)]/30">
+            <i class="fas fa-check-circle mr-1"></i>In Stock
+          </div>
+          }
+          @else{
+          <div class="text-sm font-bold text-red-500 bg-red-50 dark:bg-red-900/20 px-4 py-2 rounded-lg border-2 border-red-300 dark:border-red-700">
+            <i class="fas fa-times-circle mr-1"></i>Out of Stock
+          </div>
+          }
+        </div>
+        <!-- Quantity & Add to Cart -->
+        <div class="mt-6">
+          @if(ProductById()?.stock?.[0]){
+          <label for="qty" class="block text-sm font-semibold text-[var(--text-primary)] mb-3">
+            Quantity 
+            <span class="text-xs text-[var(--text-muted)] font-normal">
+              (Available: {{ProductById()?.stock?.[0]?.quantity}})
+            </span>
+          </label>
+          }
+          <div class="flex items-center gap-4 flex-wrap">
+            <div class="flex items-center rounded-xl border-2 border-[var(--border-color)] overflow-hidden bg-[var(--bg-primary)]">
+              <button 
+                id="dec" 
+                class="px-4 py-2 text-xl text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--accent)] transition-all duration-300"
+                (click)="decQuantity(inputQuantity.value)"
+                style="transition-timing-function: var(--ease-smooth);">
+                −
+              </button>
+              <input 
+                id="qty" 
+                type="number" 
+                [value]="quantityNum()" 
+                min="1" 
+                [max]="ProductById()?.stock?.[0]?.quantity || 10"
+                class="w-20 text-center outline-none p-2 bg-[var(--bg-primary)] text-[var(--text-primary)] border-x-2 border-[var(--border-color)]"
+                aria-label="Quantity" 
+                #inputQuantity 
+                readonly />
+              <button 
+                id="inc" 
+                class="px-4 py-2 text-xl text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--accent)] transition-all duration-300"
+                (click)="incQuantity(inputQuantity.value)"
+                style="transition-timing-function: var(--ease-smooth);">
+                +
+              </button>
+            </div>
+            <button 
+              id="addToCart"
+              class="flex-1 lg:flex-none bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-white font-bold rounded-xl px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-400 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              (click)="addTocart(ProductById()?.id!, inputQuantity.value)"
+              [disabled]="!ProductById()?.stock?.[0] || ProductById()?.stock?.[0]!.quantity <=0"
+              style="transition-timing-function: var(--ease-bounce);">
+              <i class="fas fa-cart-plus mr-2"></i>Add to Cart
+            </button>
+          </div>
+        </div>
+        <!-- Product Description -->
+        <div class="bg-[var(--bg-primary)] rounded-xl p-5 md:p-6 shadow-lg w-full block mt-6 border-2 border-[var(--border-color)] transition-all duration-300 hover:shadow-xl" style="transition-timing-function: var(--ease-smooth);">
+          <h3 class="text-lg font-bold text-[var(--text-primary)] mb-3 flex items-center gap-2">
+            <i class="fas fa-info-circle text-[var(--accent)]"></i>
+            Product Description
+          </h3>
+          <p class="text-sm md:text-base text-[var(--text-secondary)] leading-relaxed">{{ProductById()?.description || 'No description available for this product.'}}</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <!-- Related Products Section -->
+  <div class="container px-3 mx-auto flex flex-col mt-12 md:mt-16">
+    @if(relatedProducts().length >= 1){
+    <div class="border-t-2 border-[var(--border-color)] pt-8">
+      <div class="flex justify-start items-center gap-2 mb-8"> 
+        <i class="fa-solid fa-heart-circle-plus text-2xl md:text-3xl font-extrabold text-[var(--accent)]"></i>
+        <h2 class="text-2xl md:text-3xl lg:text-4xl font-extrabold leading-tight text-[var(--text-primary)]">Related Products</h2>
+      </div>
+    </div>
+    }
+    <div class="grid gap-5 md:gap-6 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+      @for (item of relatedProducts(); track item.id ) {
+      <app-product-card [productdata]="item" class="w-full" />
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,243 @@
+<div class="recommendation-page">
+  <div class="container px-3 mx-auto py-8">
+    <h1 class="text-3xl md:text-4xl font-bold mb-6 text-center text-[var(--text-primary)] transition-colors duration-300" style="transition-timing-function: var(--ease-smooth);">Product Recommendations</h1>
+
+    @if (!analysisResults) {
+      <div class="recommendation-form-container">
+        <form (ngSubmit)="onSubmit()" class="space-y-6">
+          <!-- Skin Type -->
+          <div class="form-section">
+            <h3 class="form-section-title">👤 Skin Type</h3>
+            <select
+              [(ngModel)]="analysisRequest.skinType"
+              name="skinType"
+              class="w-full p-3 bg-[var(--bg-primary)] border-2 border-[var(--border-color)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] text-[var(--text-primary)] transition-all duration-300" style="transition-timing-function: var(--ease-smooth);">
+              <option [value]="skinType.Normal">Normal</option>
+              <option [value]="skinType.Dry">Dry</option>
+              <option [value]="skinType.Oily">Oily</option>
+              <option [value]="skinType.Combination">Combination</option>
+              <option [value]="skinType.Sensitive">Sensitive</option>
+            </select>
+          </div>
+          <!-- Skin Concerns -->
+          <div class="form-section">
+            <h3 class="form-section-title">🎯 Skin Concerns</h3>
+            <div class="checkbox-grid">
+              <label class="checkbox-item">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="selectedConcerns.acne"
+                  name="acne">
+                  <span class="checkbox-label">Acne & Breakouts</span>
+                </label>
+                <label class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="selectedConcerns.dryness"
+                    name="dryness">
+                    <span class="checkbox-label">Dryness & Flakiness</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input
+                      type="checkbox"
+                      [(ngModel)]="selectedConcerns.oiliness"
+                      name="oiliness">
+                      <span class="checkbox-label">Excess Oil</span>
+                    </label>
+                    <label class="checkbox-item">
+                      <input
+                        type="checkbox"
+                        [(ngModel)]="selectedConcerns.redness"
+                        name="redness">
+                        <span class="checkbox-label">Redness & Sensitivity</span>
+                      </label>
+                      <label class="checkbox-item">
+                        <input
+                          type="checkbox"
+                          [(ngModel)]="selectedConcerns.aging"
+                          name="aging">
+                          <span class="checkbox-label">Aging & Wrinkles</span>
+                        </label>
+                        <label class="checkbox-item">
+                          <input
+                            type="checkbox"
+                            [(ngModel)]="selectedConcerns.darkSpots"
+                            name="darkSpots">
+                            <span class="checkbox-label">Dark Spots & Hyperpigmentation</span>
+                          </label>
+                        </div>
+                      </div>
+                      <!-- Specific Symptoms -->
+                      <div class="form-section">
+                        <h3 class="form-section-title">📝 Specific Symptoms</h3>
+                        <textarea
+                          [(ngModel)]="symptomsText"
+                          name="symptoms"
+                          class="w-full p-3 bg-[var(--bg-primary)] border-2 border-[var(--border-color)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] transition-all duration-300"
+                          placeholder="Describe your specific skin symptoms (e.g., itchy red patches, painful cysts, flaky skin...)"
+                          rows="4"
+                          style="transition-timing-function: var(--ease-smooth);">
+                        </textarea>
+                      </div>
+                      <!-- Additional Notes -->
+                      <div class="form-section">
+                        <h3 class="form-section-title">💬 Additional Notes</h3>
+                        <textarea
+                          [(ngModel)]="analysisRequest.additionalNotes"
+                          name="additionalNotes"
+                          class="w-full p-3 bg-[var(--bg-primary)] border-2 border-[var(--border-color)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] transition-all duration-300"
+                          placeholder="Any other information about your skin or current routine..."
+                          rows="3"
+                          style="transition-timing-function: var(--ease-smooth);">
+                        </textarea>
+                      </div>
+                      <button
+                        type="submit"
+                        [disabled]="isLoading"
+                        class="submit-btn w-full py-3 bg-[var(--primary)] hover:bg-[var(--accent)] text-white rounded-lg font-semibold disabled:bg-[var(--neutral)] disabled:cursor-not-allowed shadow-lg hover:shadow-xl transition-all duration-400"
+                        style="transition-timing-function: var(--ease-bounce);">
+                        @if (!isLoading) {
+                          <span><i class="fas fa-magic mr-2"></i>Get Recommendations</span>
+                        }
+                        @if (isLoading) {
+                          <span><i class="fas fa-spinner fa-spin mr-2"></i>Analyzing...</span>
+                        }
+                      </button>
+                    </form>
+                  </div>
+                }
+
+                <!-- Results Section -->
+                @if (analysisResults) {
+                  <div class="results-container mt-8">
+                    <!-- Debug info (remove in production) -->
+                    <!-- <div class="mb-4 p-4 bg-yellow-100 rounded">
+                      <p>Debug: analysisResults exists: {{ !!analysisResults }}</p>
+                      <p>Skin Type: {{ analysisResults.skinType }}</p>
+                      <p>Products Count: {{ analysisResults.recommendedProducts?.length || 0 }}</p>
+                    </div> -->
+                    <div class="bg-[var(--bg-card)] rounded-xl shadow-xl p-6 md:p-8 mb-6 border-2 border-[var(--border-color)] transition-all duration-400" style="transition-timing-function: var(--ease-smooth); box-shadow: 0 8px 25px var(--shadow-md);">
+                      <h2 class="text-2xl md:text-3xl font-bold mb-4 text-[var(--text-primary)]">Analysis Results</h2>
+                      <div class="mb-4">
+                        <h3 class="font-semibold text-lg mb-2">Identified Conditions:</h3>
+                        <div class="flex flex-wrap gap-2">
+                          @if (analysisResults.identifiedConditions && analysisResults.identifiedConditions.length > 0) {
+                            @for (condition of analysisResults.identifiedConditions; track condition) {
+                              <span
+                                class="px-3 py-1 bg-gradient-to-r from-[var(--accent)]/20 to-[var(--highlight)]/20 text-[var(--accent)] border-2 border-[var(--accent)]/30 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-110"
+                                style="transition-timing-function: var(--ease-bounce);">
+                                {{ condition }}
+                              </span>
+                            }
+                          } @else {
+                            <p class="text-[var(--text-muted)] italic">No specific conditions identified based on your input.</p>
+                          }
+                        </div>
+                      </div>
+                      <div class="mb-4">
+                        <p class="text-[var(--text-secondary)] leading-relaxed">{{ analysisResults.analysisSummary }}</p>
+                      </div>
+                      <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                          <h3 class="font-semibold mb-2 text-[var(--text-primary)]">Recommended Ingredients:</h3>
+                          @if (analysisResults.recommendedIngredients && analysisResults.recommendedIngredients.length > 0) {
+                            <ul class="list-disc list-inside text-sm text-[var(--text-secondary)] space-y-1">
+                              @for (ingredient of analysisResults.recommendedIngredients; track ingredient) {
+                                <li class="transition-colors duration-200 hover:text-[var(--accent)]">
+                                  {{ ingredient }}
+                                </li>
+                              }
+                            </ul>
+                          } @else {
+                            <p class="text-sm text-[var(--text-muted)] italic">No specific ingredients recommended at this time.</p>
+                          }
+                        </div>
+                        <div>
+                          <h3 class="font-semibold mb-2 text-[var(--text-primary)]">Ingredients to Avoid:</h3>
+                          @if (analysisResults.ingredientsToAvoid && analysisResults.ingredientsToAvoid.length > 0) {
+                            <ul class="list-disc list-inside text-sm text-[var(--text-secondary)] space-y-1">
+                              @for (ingredient of analysisResults.ingredientsToAvoid; track ingredient) {
+                                <li class="transition-colors duration-200 hover:text-red-500">
+                                  {{ ingredient }}
+                                </li>
+                              }
+                            </ul>
+                          } @else {
+                            <p class="text-sm text-[var(--text-muted)] italic">No specific ingredients to avoid based on your profile.</p>
+                          }
+                        </div>
+                      </div>
+                      <div class="mb-4">
+                        <h3 class="font-semibold mb-2 text-[var(--text-primary)]">Routine Advice:</h3>
+                        <ul class="list-none space-y-2 text-sm text-[var(--text-secondary)]">
+                          @for (advice of getRoutineAdviceLines(); track advice) {
+                            <li class="flex items-start gap-2">
+                              <i class="fas fa-check-circle text-[var(--accent)] mt-1 flex-shrink-0"></i>
+                              <span>{{ advice }}</span>
+                            </li>
+                          }
+                        </ul>
+                      </div>
+                    </div>
+                    <!-- Recommended Products -->
+                    <div class="mb-6">
+                      <h2 class="text-2xl md:text-3xl font-bold mb-4 text-[var(--text-primary)]">Recommended Products</h2>
+                      @if (analysisResults.recommendedProducts && analysisResults.recommendedProducts.length > 0) {
+                        <div class="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                          @for (product of analysisResults.recommendedProducts; track product.productId) {
+                            <div
+                              class="bg-[var(--bg-card)] rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-400 cursor-pointer border-2 border-[var(--border-color)] transform hover:scale-105"
+                              (click)="viewProduct(product.productId)"
+                              style="transition-timing-function: var(--ease-bounce); box-shadow: 0 8px 20px var(--shadow-md);">
+                              <img [src]="product.imageUrl || '/assets/placeholder.png'"
+                                [alt]="product.name"
+                                class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
+                                style="transition-timing-function: var(--ease-smooth);">
+                                <div class="p-4">
+                                  <h3 class="font-semibold text-lg mb-2 text-[var(--text-primary)]">{{ product.name }}</h3>
+                                  <p class="text-sm text-[var(--text-secondary)] mb-2 line-clamp-2">{{ product.description }}</p>
+                                  <div class="mb-2">
+                                    <span class="text-[var(--accent)] font-bold text-lg">${{ product.price }}</span>
+                                    @if (product.discountPrice) {
+                                      <span class="text-[var(--text-muted)] line-through ml-2">
+                                        ${{ product.discountPrice }}
+                                      </span>
+                                    }
+                                  </div>
+                                  <p class="text-xs text-[var(--accent)] mb-2 italic">{{ product.recommendationReason }}</p>
+                                  @if (product.keyIngredients && product.keyIngredients.length > 0) {
+                                    <div class="mt-2">
+                                      <p class="text-xs font-semibold mb-1 text-[var(--text-primary)]">Key Ingredients:</p>
+                                      <div class="flex flex-wrap gap-1">
+                                        @for (ingredient of product.keyIngredients.slice(0, 3); track ingredient) {
+                                          <span
+                                            class="px-2 py-1 bg-[var(--bg-secondary)] text-[var(--text-secondary)] border border-[var(--border-color)] rounded text-xs transition-all duration-200 hover:bg-[var(--accent)] hover:text-white">
+                                            {{ ingredient }}
+                                          </span>
+                                        }
+                                      </div>
+                                    </div>
+                                  }
+                                </div>
+                              </div>
+                            }
+                          </div>
+                        } @else {
+                          <div class="bg-[var(--bg-card)] rounded-xl shadow-lg p-8 text-center border-2 border-[var(--border-color)]">
+                            <i class="fas fa-info-circle text-4xl text-[var(--text-muted)] mb-4"></i>
+                            <p class="text-lg text-[var(--text-secondary)] mb-2">No products found at this time.</p>
+                            <p class="text-sm text-[var(--text-muted)]">Please try adjusting your skin type or concerns, or check back later for more products.</p>
+                          </div>
+                        }
+                      </div>
+                      <button
+                        (click)="resetForm()"
+                        class="w-full py-3 bg-[var(--neutral)] hover:bg-[var(--primary)] text-white rounded-lg font-semibold transition-all duration-400 transform hover:scale-105 shadow-lg hover:shadow-xl mt-6"
+                        style="transition-timing-function: var(--ease-bounce);">
+                        <i class="fas fa-redo mr-2"></i>Start New Analysis
+                      </button>
+                    </div>
+                  }
+                </div>
+              </div>
+
