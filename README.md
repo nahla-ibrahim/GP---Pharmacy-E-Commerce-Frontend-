@@ -1,59 +1,38 @@
-# ITIFront
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.6.
+<p align="center">
+  <img src="https://github.com/nahla-ibrahim/GP---Pharmacy-E-Commerce-Frontend-/blob/main/src/assets/images/logo.png)" alt="Pharmacy Logo" width="140" />
+</p>
 
-## Development server
 
-To start a local development server, run:
+# 💊 Pharmacy E-Commerce Platform
 
-```bash
-ng serve
-```
+## 📌 Project Overview
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+This project is a **Graduation Project from the ITI (Information Technology Institute)**.  
+It represents a **Pharmacy E-Commerce Platform** that allows users to browse products, manage orders, and interact with a modern, responsive user interface.
 
-## Code scaffolding
+The project was developed by a team of 5 members.
+I was part of the frontend development team working with Angular and Tailwind CSS.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
 
-```bash
-ng generate component component-name
-```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🛠️ Technologies Used
 
-```bash
-ng generate --help
-```
+### Frontend
+- **Angular 20**
+- **Tailwind CSS**
 
-## Building
+### Backend (Team Work)
+- ASP.NET Core Web API
+- SQL Server
+- JWT Authentication
+- signalR 
 
-To build the project run:
+---
 
-```bash
-ng build
-```
+## 🎥 Project Demo
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+<video width="100%" controls>
+  <source src="https://github.com/user-attachments/assets/71c01201-77b5-474f-8867-72ce5c7115cf" type="video/mp4">
+</video>
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
