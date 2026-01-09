@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="https://github.com/nahla-ibrahim/GP---Pharmacy-E-Commerce-Frontend-/blob/main/src/assets/images/logo.png)" alt="Pharmacy Logo" width="140" />
+  <img src="https://github.com/nahla-ibrahim/GP---Pharmacy-E-Commerce-Frontend-/blob/main/src/assets/images/logo.png" alt="Pharmacy Logo" width="140" />
 </p>
 
 
@@ -30,9 +30,9 @@ I was part of the frontend development team working with Angular and Tailwind CS
 
 ---
 
+
 ## 🎥 Project Demo
 
-<video width="100%" controls>
-  <source src="https://github.com/user-attachments/assets/71c01201-77b5-474f-8867-72ce5c7115cf" type="video/mp4">
-</video>
+https://github.com/user-attachments/assets/07e6037c-3384-4c4a-9cec-ab2dc364e486
+
 
